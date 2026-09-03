@@ -26,7 +26,7 @@ func init() {
 	if p := os.Getenv("GLXX_ARCHIVE"); p != "" {
 		archivePath = p
 	}
-	dumpCmd.Flags().StringP("archive", "a", os.Getenv("GLXX_ARCHIVE"), "the `dir` of the archive")
+	glxxCmd.PersistentFlags().StringP("archive", "a", os.Getenv("GLXX_ARCHIVE"), "the `dir` of the archive")
 }
 
 // Execute runs the glxx command.
