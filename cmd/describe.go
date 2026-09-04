@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
+	"unicode/utf8"
 
 	"github.com/dhemery/glxx/load"
 	"github.com/genealogix/glx/go-glx"
@@ -30,7 +32,8 @@ func describe(_ *cobra.Command, ids []string) error {
 		return fmt.Errorf("Not implemented: describe citations")
 	}
 	if e, ok := archive.Events[id]; ok {
-		return describeEvent(archive, e)
+		describeEvent(archive, id, e)
+		return nil
 	}
 	if _, ok := archive.Media[id]; ok {
 		return fmt.Errorf("Not implemented: describe media")
@@ -54,31 +57,85 @@ func describe(_ *cobra.Command, ids []string) error {
 	return fmt.Errorf("Unknown ID: %s", id)
 }
 
-func describeEvent(a *glx.GLXFile, e *glx.Event) error {
-	fmt.Println("      Title : ", e.Title)
-	fmt.Println("       Type : ", e.Type)
-	fmt.Println("      Place : ", fullPlaceName(a, e.PlaceID))
-	fmt.Println("       Date : ", e.Date)
-	fmt.Println("Participants:")
+func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
+	printReportHeader(id)
+
+	printReportItem("Title:", e.Title)
+	printReportItem("Type:", e.Type)
+	printReportItem("Place:", placeName(a, e.PlaceID))
+	printReportItem("Date:", e.Date)
+
+	printSectionHeader("Participants")
 	for _, p := range e.Participants {
-		fmt.Printf("    %s: %s\n", p.Role, p.Person)
+		printParticipation(a, p.Person, p.Role)
 	}
-	return nil
+	fmt.Println()
 }
 
-func fullPlaceName(a *glx.GLXFile, id string) string {
+const unspecifiedValue = "—"
+
+func placeName(a *glx.GLXFile, id string) string {
+	if id == "" {
+		return unspecifiedValue
+	}
+
 	p, ok := a.Places[id]
 	if !ok {
-		return id
+		return formattedUnknownID(id, "place")
 	}
 
 	if p.Name == "" {
-		return "nameless:" + id
+		return formattedUnnamedEntity(id, "place")
 	}
 
 	if p.ParentID == "" {
 		return p.Name
 	}
 
-	return p.Name + ", " + fullPlaceName(a, p.ParentID)
+	return p.Name + ", " + placeName(a, p.ParentID)
+}
+
+func personName(a *glx.GLXFile, id string) string {
+	p, ok := a.Persons[id]
+	if !ok {
+		return formattedUnknownID(id, "person")
+	}
+
+	name := glx.PersonDisplayName(p)
+	if name == "" {
+		return formattedUnnamedEntity(id, "person")
+	}
+
+	return name
+}
+
+func printParticipation(a *glx.GLXFile, personID string, role string) {
+	label := strings.ToUpper(role[:1]) + role[1:] + ":"
+	name := personName(a, personID)
+	printReportItem(label, name)
+}
+
+func printReportHeader(title string) {
+	fmt.Printf("=== %s ===\n\n", title)
+}
+
+func printReportItem(label string, value any) {
+	fmt.Printf("  %-18s%s\n", label, value)
+}
+
+func printSectionHeader(title string) {
+	const width = 50
+	prefix := "\n── " + title + " "
+	remaining := max(width-utf8.RuneCountInString(prefix), 2)
+
+	fmt.Println(prefix + strings.Repeat("─", remaining))
+}
+
+func formattedUnknownID(id, typ string) string {
+
+	return fmt.Sprintf("unknown %s id %s", typ, id)
+}
+
+func formattedUnnamedEntity(id, typ string) string {
+	return fmt.Sprintf("unnamed %s id %s", typ, id)
 }
