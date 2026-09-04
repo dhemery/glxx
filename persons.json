@@ -1,0 +1,1680 @@
+{
+  "Persons": {
+    "althea-emery": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Althea Dorothy",
+            "surname": "Emery",
+            "type": "birth"
+          },
+          "value": "Althea Dorothy Emery"
+        },
+        "residence": [
+          {
+            "date": "1930-04-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1940-04-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "absalom-farwell": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Absalom",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "Absalom Farwell"
+        },
+        "sex": "male"
+      }
+    },
+    "mark-chick": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Mark Wentworth",
+            "surname": "Chick",
+            "type": "birth"
+          },
+          "value": "Mark Wentworth Chick"
+        },
+        "sex": "male"
+      },
+      "Notes": [
+        "Mark Wentworth Chick\n\nCensus\n\n1850 census\nJohn F. Chick household, South Berwick, page 635 (written)\nhttps://www.familysearch.org/ark:/61903/3:1:S3HT-6234-QS\n\nTimothy Wentworth household, Berwick DIFFERENT Mark Chick\nhttps://www.familysearch.org/ark:/61903/3:1:S3HT-623W-WX\n\n1860 census TBD\n\n1870 census Somersworth hh of William M. Jordan\nhttps://www.familysearch.org/ark:/61903/3:1:S3HY-6SVW-MT\nLine 24, 36, works in cotton mill\n\n1880 census, boarder in Thomas F. Ritchie household, Somersworth\nhttps://www.familysearch.org/ark:/61903/3:1:33SQ-GYBX-9PS6\n\n1900 TBD\n\n1910 census, Eliot, hired man in household of Henry Durgin\nhttps://www.familysearch.org/ark:/61903/3:1:33S7-9RN6-8MV\n\nOther Events\n1860 son John born in Somersworth\n\n15 Apr 1869 death of wife Olive\nhttps://www.familysearch.org/ark:/61903/3:1:3QSQ-G9FQ-S1J4\n\tThis explains why John was not living with them in 1870 and 1880\nhttps://www.findagrave.com/memorial/80942864 tombstone\n\n25 Dec 1871 marriage to Mary E. Tuttle\nhttps://www.familysearch.org/ark:/61903/3:1:S3HY-64L9-B7T\nhttps://www.familysearch.org/ark:/61903/3:1:3QS7-L99K-HKYV Town record book\n\tTitle page https://www.familysearch.org/ark:/61903/3:1:3QS7-899K-HLZZ\n\n29 May 1882 Son John maries Belle E. Gowen\nhttps://www.familysearch.org/ark:/61903/3:1:S3HY-64LF-TL\n\n1 Feb 1888 Daughter Jessie marries Arthur F. Hammond\nhttps://www.familysearch.org/ark:/61903/3:1:S3HT-6LKS-6TN\n\n5 Sep 1899 Daughter Bessie marries Charles H. Barney\nhttps://www.familysearch.org/ark:/61903/3:1:3QSQ-G97M-7G4T Certificate (Melrose)\nhttps://www.familysearch.org/ark:/61903/3:1:3QS7-L9QB-747H Boston register\nhttps://www.familysearch.org/ark:/61903/3:1:S3HT-D1J3-STX Melrose register\n\n\n5 Nov 1911 death\nhttps://www.familysearch.org/ark:/61903/3:1:3QS7-89FQ-SBLV cemetery record\n\tGives death date and age (to the day)\n\tOlive A. wife d 1869\n\tIda B dau 1880\n\tWho are “George E. (Father)” and “Laura A. (Mother)”?\n\t\tPerhaps Mark's brother and his wife\nhttps://www.familysearch.org/ark:/61903/3:1:3QS7-L9XF-299V-3 Portsmouth registry\n\tChronic bright's disease\nhttps://www.familysearch.org/ark:/61903/3:1:3QS7-L9XF-299V-3 record of death\n\nGrave\nhttps://www.findagrave.com/memorial/80942859\n\nDover City Directory\n\n1874 Dover directory Somersworth boarding house 3 Elm\nhttps://www.ancestry.com/imageviewer/collections/2469/images/14458593\n\n1876 Dover directory Somersworth h. 3 Elm\nhttps://www.ancestry.com/imageviewer/collections/2469/images/15759915\n\n1878 Dover directory Somersworth bds. Lorenzo Smith’s\nhttps://www.ancestry.com/imageviewer/collections/2469/images/15498052\n\n1880 Dover directory Somersworth at G.F.M. Co., boards T. Ritchie’s\nhttps://www.ancestry.com/imageviewer/collections/2469/images/15646667\n\n1882 Dover directory Somersworth at G.F.M. Co., boards T. Ritchie’s\nat bleachery, h. Highland\nhttps://www.ancestry.com/imageviewer/collections/2469/images/15471415\n\n1884 Dover directory Somersworth at G.F.M. Co, boards at T. Ritchie's\nhttps://www.ancestry.com/imageviewer/collections/2469/images/13665307\n\n1886 Dover directory Somersworth at G.F.M. Co., bds. T. Richie’s\nhttps://www.ancestry.com/imageviewer/collections/2469/images/15735807\n\n1892 not listed in Dover directory\n"
+      ]
+    },
+    "melvin-farwell": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Melvin",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "Melvin Farwell"
+        },
+        "sex": "male"
+      }
+    },
+    "john-chick-1860": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "John Franklin",
+            "surname": "Chick"
+          },
+          "value": "John Franklin Chick"
+        },
+        "residence": [
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "male"
+      },
+      "Notes": [
+        "John F. Chick (1860–1887)\n\nWill of Zilpha (Roberts, Morrill) Wentworth witnessed by John and Belle\nhttps://www.familysearch.org/ark:/61903/3:1:3QSQ-G9HJ-ZCPD\n\nZilpha was married to Lydia’s cousin Jacob\n\t6 Jan 1846 Marriage to Jacob: https://www.familysearch.org/ark:/61903/3:1:3Q9M-C9BJ-J7GM\n\tLiving in Canaan New Hampshire at time of marriage.\n\nZilpha Morrill https://www.familysearch.org/en/tree/person/details/M1XF-FPM (b. 7 Sep 1804 in Maine)\nSon Charles R. Morrill (earlier marriage?)\nSon Barton M. Wentworth\n\tHis death record calls her Roberts, but I think that's his wife's maiden name. Could be both.\n\thttps://www.familysearch.org/ark:/61903/3:1:S3HT-673Q-7J9 )\n\n1860 lived near Gowens, who were in Woodsom household\nhttps://www.familysearch.org/ark:/61903/3:1:33SQ-GB9V-77H\n\n\nDover City directory\n1879 https://www.ancestry.com/imageviewer/collections/2469/images/15498052\n\tJohn Chick “at bleachery, house Highland” Great Falls\n1880 https://www.ancestry.com/imageviewer/collections/2469/images/15646667\n\tJohn Chick “at bleachery, house Highland” Great Falls\n\n\n"
+      ]
+    },
+    "armine-bennett": {
+      "Properties": {
+        "residence": [
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "female",
+        "name": {
+          "fields": {
+            "given": "Armine",
+            "surname": "Bennett",
+            "type": "birth"
+          },
+          "value": "Armine Bennett"
+        }
+      }
+    },
+    "abigail-hearl": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Abigail",
+            "surname": "Hearl",
+            "type": "birth"
+          },
+          "value": "Abigail Hearl"
+        },
+        "residence": [
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "leonard-emery": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Leonard A.",
+            "surname": "Emery",
+            "type": "birth"
+          },
+          "value": "Leonard A. Emery"
+        },
+        "occupation": [
+          {
+            "value": "Farmer (1880–1900, 1920)"
+          },
+          {
+            "value": "Carriage Dealer (1900)"
+          },
+          {
+            "value": "Carriage Painter (1910)"
+          }
+        ],
+        "residence": [
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1900-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1910-04-15",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1920-01-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "john-chick-1887": {
+      "Properties": {
+        "residence": [
+          {
+            "date": "1900-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1910-02-21",
+            "value": "place-us-me-york-north-berwick"
+          },
+          {
+            "value": "place-us-me-york-north-berwick",
+            "date": "1910-04-15"
+          },
+          {
+            "date": "1920-01-01",
+            "value": "place-us-ma-essex-amesbury"
+          },
+          {
+            "date": "1930-04-01",
+            "value": "place-us-me-york-north-berwick"
+          }
+        ],
+        "sex": "male",
+        "name": {
+          "fields": {
+            "given": "John Franklin",
+            "surname": "Chick",
+            "type": "birth"
+          },
+          "value": "John Franklin Chick"
+        },
+        "occupation": [
+          {
+            "value": "1910: Salesman (clothing)"
+          },
+          {
+            "value": "1933: Salesman"
+          }
+        ]
+      }
+    },
+    "john-chick-1810": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "surname": "Chick",
+            "type": "birth",
+            "given": "John F."
+          },
+          "value": "John F. Chick"
+        },
+        "sex": "male"
+      },
+      "Notes": [
+        "John F. Chick (1810–1883)\n\n4 Jan 1843 Deed selling South Berwick land he had bought from Theodore Jewett (Sarah's father)\nhttps://www.familysearch.org/ark:/61903/3:1:3Q9M-CSRH-DSBL-D\n\n6 Jul 1843 William A. Hayes vs John F. Chick: ejectment from John’s tailoring establishment\nhttps://www.familysearch.org/ark:/61903/3:1:9392-RJ8G-N\n\n6 Jul 1843 John F. Chick mortgages to William A. Hayes\nhttps://www.familysearch.org/ark:/61903/3:1:3Q9M-CSRH-WSRF-Y\n\n4 Jan 1845 marriage to Lydia Wentworth\n\tHandwritten in record book, right side, 11 up from bottom\n\thttps://www.familysearch.org/ark:/61903/3:1:3Q9M-C9BJ-F7TH-M\n\n\tForm: https://www.familysearch.org/ark:/61903/3:1:3QS7-99N8-S4HC\n\nAug 1847 John F. Chick vs Henry Beedle\nhttps://www.familysearch.org/ark:/61903/3:1:3Q9M-C3H1-D97Z-9\n\n17 Oct 1848 William Hayes vs John F. Chick\nhttps://www.familysearch.org/ark:/61903/3:1:9392-RJ85-T\n\n5 Mar 1849 James Hooper and Daniel Jones vs John F. Chick\nhttps://www.familysearch.org/ark:/61903/3:1:9392-RJ64-W\n\n1850 census\nJohn F. Chick household, South Berwick, page 635 (written)\nhttps://www.familysearch.org/ark:/61903/3:1:S3HT-6234-QS\n\n1880 census\nhttps://www.familysearch.org/ark:/61903/3:1:33S7-9YBN-HTD\n\n24 Nov 1895 George E. Chick record of death (compression of brain)\nhttps://www.familysearch.org/ark:/61903/3:1:3QS7-899K-PTRB\n\n19 Feb 1897 Death of daughter Elizabeth (Chick) Hanson\nhttps://www.familysearch.org/ark:/61903/3:1:9398-46HB-K\n"
+      ]
+    },
+    "charles-bennett": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Charles",
+            "surname": "Bennett",
+            "type": "birth"
+          },
+          "value": "Charles Bennett"
+        },
+        "residence": [
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "samuel-lawson-farwell": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Samuel Lawson",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "Samuel Lawson Farwell"
+        },
+        "residence": [
+          {
+            "date": "1850-06-01",
+            "value": "place-us-me-oxford-bethel"
+          },
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-oxford-bethel"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "agnes-wilson": {
+      "Properties": {
+        "sex": "female",
+        "name": {
+          "fields": {
+            "given": "Agnes Marion",
+            "surname": "Wilson",
+            "type": "birth"
+          },
+          "value": "Agnes Marion Wilson"
+        },
+        "residence": [
+          {
+            "date": "1900-06-01",
+            "value": "place-us-co-park-fairplay"
+          }
+        ]
+      },
+      "Notes": [
+        "Agnes, like her mother, married a man 17 years her senior.\nThis the 2nd marriage both for her and for her husband Walter Charles Bateman.\nThey had each divorced.\n\nAgnes\nMother: Mary E. Davis (Illinois)\nFather: Daniel H. Wilson (Massachusetts)\nSays mother Mary E. Davis\nFirst husband: Epperson\n\nBateman\nAge 64 born Illinois\nMother: Lizzie Horn (Ohio).\nFather George F. Bateman (New Hampshire)\n",
+        "Agnes Marion Wilson\n\n1 Jan 1910 Report of marriage to Harry Epperson\nhttps://www.ancestry.com/imageviewer/collections/61366/images/TH-1942-25805-34696-37\n\n1920 census with Harry Epperson in Howbert CO\nhttps://www.ancestry.com/imageviewer/collections/6061/images/4294438-01138\n\n1930 census with Harry Epperson in Salida\nhttps://www.ancestry.com/imageviewer/collections/6224/images/4532377_00428\n\n17 Jul 1935 divorce from Harry Epperson\nhttps://www.ancestry.com/search/collections/60927/records/591172\n\n8 Jan 1937 Notice of intention to marry Walter Charles Batemen\nhttps://www.newspapers.com/image/90422842/\n\n1940 census with Walter Bateman in Salida\nhttps://www.ancestry.com/imageviewer/collections/2442/images/m-t0627-00458-00164?pId=39364911\n\n1950 census with Walter Bateman in Salida\nhttps://www.ancestry.com/imageviewer/collections/62308/images/43290879-Colorado-096642-0017?pId=20172996\n\n14 Aug 1955 Death certificate son Albert\nhttps://www.ancestry.com/imageviewer/collections/9174/images/42675_b160041-00088\n\n14 Aug 1955 Several obituaries of son Albert, a respected editor in Utah\nhttps://www.newspapers.com/image/544940649/\n\n14 May 1966 tombstone\nhttps://www.findagrave.com/memorial/46807489/\nhttps://www.findagrave.com/cemetery/57272\n\n\n\nOther profiles\nhttps://www.ancestry.com/family-tree/person/tree/69866290/person/402648601542/facts\nhttps://www.ancestry.com/family-tree/person/tree/77876/person/-2121255872/facts\nhttps://www.ancestry.com/family-tree/person/tree/169227901/person/172197144774/facts (has photo)\n"
+      ]
+    },
+    "hartley-emery-1896": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "Hartley Leonard",
+            "surname": "Emery"
+          },
+          "value": "Hartley Leonard Emery"
+        },
+        "occupation": "Farmer",
+        "residence": [
+          {
+            "date": "1900-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1910-04-15",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1920-01-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1930-04-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1940-04-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "value": "place-us-me-york-berwick",
+            "date": "1950-04-01"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "ruth-rolfe": {
+      "Properties": {
+        "sex": "female",
+        "name": {
+          "fields": {
+            "given": "Ruth Alice",
+            "surname": "Rolfe",
+            "type": "birth"
+          },
+          "value": "Ruth Alice Rolfe"
+        },
+        "occupation": "Stenographer (1933)",
+        "residence": [
+          {
+            "date": "1920-01-01",
+            "value": "place-us-nh-strafford-somersworth"
+          },
+          {
+            "value": "place-us-nh-strafford-somersworth",
+            "date": "1930-04-01"
+          },
+          {
+            "date": "1940-04-01",
+            "value": "place-us-nh-strafford-somersworth"
+          },
+          {
+            "date": "1950-04-01",
+            "value": "place-us-nh-strafford-somersworth"
+          }
+        ]
+      }
+    },
+    "james-york": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "James H.",
+            "surname": "York",
+            "type": "birth"
+          },
+          "value": "James H. York"
+        },
+        "sex": "male"
+      }
+    },
+    "jairus-emery": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Jairus",
+            "surname": "Emery",
+            "type": "birth"
+          },
+          "value": "Jairus Emery"
+        },
+        "occupation": [
+          {
+            "value": "Laborer (1850)"
+          },
+          {
+            "value": "Farmer (1860–1880)"
+          }
+        ],
+        "residence": [
+          {
+            "date": "1850-06-01",
+            "value": "place-us-me-york-eliot"
+          },
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-eliot"
+          },
+          {
+            "value": "place-us-nh-strafford-rollinsford",
+            "date": "1860-06-01"
+          },
+          {
+            "value": "place-us-me-york-berwick",
+            "date": "1870-06-01"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1900-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1910-04-15",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "james-wilson": {
+      "Properties": {
+        "name": {
+          "value": "James Ransom Wilson",
+          "fields": {
+            "given": "James Ransom",
+            "surname": "Wilson",
+            "type": "birth"
+          }
+        },
+        "residence": [
+          {
+            "date": "1900-06-01",
+            "value": "place-us-co-park-fairplay"
+          },
+          {
+            "date": "1910-04-01",
+            "value": "place-us-co-park-garo"
+          }
+        ],
+        "sex": "male"
+      },
+      "Notes": [
+        "James Ransom Wilson\n\n1930 census\nhttps://www.familysearch.org/ark:/61903/3:1:33SQ-GRH3-S9Z\n\n1940 census (probably not him because missing wife Anna)\nhttps://www.ancestry.com/imageviewer/collections/2442/images/m-t0627-00463-00784?queryId=d076bdd5-ee26-484b-afd5-8c83cd04de47&usePUB=true&_phsrc=GpQ1&_phstart=successSource&usePUBJs=true&pId=42028206\n\n1950 census\nhttps://www.ancestry.com/imageviewer/collections/62308/images/43290879-Colorado-175262-0022?queryId=d076bdd5-ee26-484b-afd5-8c83cd04de47&usePUB=true&_phsrc=GpQ3&_phstart=successSource&usePUBJs=true&pId=18835148\n\nObituary\nhttps://www.newspapers.com/image/537228422/\n30 May 1882 born.\n29 Nov 1965 died Buena Vista\n\n12 Aug 1914 married Anna Berry at Buffalo Springs\n4 Oct 1955 wife Anna died\n\n2 Jul 1958 married Lena Moon at Cedaredge\n7 Jun 1959 wife Lena died\n\n1 Jun 1960 married Mrs. Marian Bertram\n27 Oct 1961 wife Marian died\n\nSon Robert J. Wilson of Annadale, Va.\nDaughter Elisabeth Wilson of Syracuse, NY.\nSister Agnes Bateman of Salida.\n\n\n"
+      ]
+    },
+    "molley-farwell": {
+      "Properties": {
+        "name": {
+          "value": "Molley Farwell",
+          "fields": {
+            "given": "Molley",
+            "surname": "Farwell",
+            "type": "birth"
+          }
+        },
+        "sex": "female"
+      }
+    },
+    "orin-bennett": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Orin Fairfield",
+            "surname": "Bennett",
+            "type": "birth"
+          },
+          "value": "Orin Fairfield Bennett"
+        },
+        "residence": [
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "daniel-wilson": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Daniel H.",
+            "surname": "Wilson",
+            "type": "birth"
+          },
+          "value": "Daniel H. Wilson"
+        },
+        "residence": [
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1883-06-22",
+            "value": "place-us-co-park-hall-valley"
+          },
+          {
+            "date": "1900-06-01",
+            "value": "place-us-co-park-fairplay"
+          },
+          {
+            "date": "1910-04-01",
+            "value": "place-us-co-park-garo"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "daniel-emery": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Daniel",
+            "surname": "Emery",
+            "type": "birth"
+          },
+          "value": "Daniel Emery"
+        },
+        "sex": "male"
+      }
+    },
+    "clifford-wilson": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "surname": "Wilson",
+            "type": "birth",
+            "given": "Clifford R."
+          },
+          "value": "Clifford R. Wilson"
+        },
+        "residence": [
+          {
+            "date": "1900-06-01",
+            "value": "place-us-co-park-fairplay"
+          },
+          {
+            "date": "1910-04-01",
+            "value": "place-us-co-park-garo"
+          }
+        ],
+        "sex": "male"
+      },
+      "Notes": [
+        "Mary L. D. (Emery) Wilson's son Clifford married Margaret Guptill, daughter of Samuel and Inez (Davis) Guptill.\n\nA cursory search does not reveal an obvious connection between Inez Davis and Lizzie Davis (Mary's birth mother).\n\nThe land that Daniel Wilson bought on Blackberry Hill in 1877 bordered on the land of D. Guptill."
+      ]
+    },
+    "enoch-emery-1796": {
+      "Properties": {
+        "name": {
+          "value": "Enoch Emery",
+          "fields": {
+            "type": "birth",
+            "given": "Enoch",
+            "surname": "Emery"
+          }
+        },
+        "occupation": [
+          {
+            "value": "Yeoman (1825)"
+          },
+          {
+            "value": "Carpenter (1850)"
+          },
+          {
+            "value": "Farmer (1860–1880)"
+          }
+        ],
+        "residence": [
+          {
+            "value": "place-us-me-york-eliot",
+            "date": "1830-06-01"
+          },
+          {
+            "value": "place-us-me-york-eliot",
+            "date": "1840-06-01"
+          },
+          {
+            "date": "1850-06-01",
+            "value": "place-us-me-york-eliot"
+          },
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-eliot"
+          },
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-eliot"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-eliot"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "unknown-unknown-1": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "surname": "—",
+            "type": "birth",
+            "given": "—"
+          },
+          "value": "— —"
+        },
+        "sex": "female"
+      }
+    },
+    "leila-rolfe": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "Leila Gertrude",
+            "nickname": "Lee",
+            "surname": "Rolfe"
+          },
+          "value": "Leila Gertrude \"Lee\" Rolfe"
+        },
+        "residence": [
+          {
+            "date": "1920-01-01",
+            "value": "place-us-nh-strafford-somersworth"
+          },
+          {
+            "date": "1930-04-01",
+            "value": "place-us-nh-strafford-somersworth"
+          },
+          {
+            "date": "1940-04-01",
+            "value": "place-us-me-york-north-berwick"
+          },
+          {
+            "date": "1950-04-01",
+            "value": "place-us-me-york-north-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "walter-bateman": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "surname": "Bateman",
+            "type": "birth",
+            "given": "Walter Charles"
+          },
+          "value": "Walter Charles Bateman"
+        },
+        "sex": "male"
+      }
+    },
+    "mary-bennett": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Mary E.",
+            "surname": "Bennett",
+            "type": "birth"
+          },
+          "value": "Mary E. Bennett"
+        },
+        "residence": [
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "value": "place-us-me-york-south-berwick",
+            "date": "1870-06-01"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "elizabeth-fccb473f": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "Elizabeth",
+            "surname": "—"
+          },
+          "value": "Elizabeth —"
+        },
+        "sex": "female"
+      }
+    },
+    "fred-langill": {
+      "Properties": {
+        "name": {
+          "value": "Fred Maynard Langill",
+          "fields": {
+            "given": "Fred Maynard",
+            "surname": "Langill",
+            "type": "birth"
+          }
+        },
+        "residence": [
+          {
+            "date": "1950-04-01",
+            "value": "place-us-me-york-north-berwick"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "absalom-farwell-1831": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Absalom",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "Absalom Farwell"
+        },
+        "residence": [
+          {
+            "date": "1850-06-01",
+            "value": "place-us-me-oxford-bethel"
+          },
+          {
+            "value": "place-us-me-oxford-bethel",
+            "date": "1860-06-01"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "patricia-chick": {
+      "Properties": {
+        "name": {
+          "value": "Patricia June Chick",
+          "fields": {
+            "given": "Patricia June",
+            "nickname": "Pat",
+            "surname": "Chick"
+          }
+        },
+        "sex": "female"
+      }
+    },
+    "frances-farwell": {
+      "Properties": {
+        "sex": "female",
+        "name": {
+          "fields": {
+            "given": "Frances Caroline",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "Frances Caroline Farwell"
+        },
+        "residence": [
+          {
+            "date": "1850-06-01",
+            "value": "place-us-me-oxford-bethel"
+          },
+          {
+            "value": "place-us-me-york-berwick",
+            "date": "1870-06-01"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ]
+      },
+      "Notes": [
+        "The Farwell Name. Numerous records from before 1900 or so spell the name Farewell.\n\nWhile I was growing up, several of my relatives from this family lived very near, on Blackberry Hill Road in Berwick. By that time, the name they all used was Farwell.\n\nWe pronounced the name in a more or less typical Maine fashion, softening or droppng the R sound. As a result, the name sounded like the word vowel, but starting with an F.",
+        "Frances Farwell.\n\nAppears in a second household in 1850: https://www.familysearch.org/ark:/61903/3:1:S3HT-6SC3-89V?wc=95R7-3T5 line 21"
+      ]
+    },
+    "augustus-bennett": {
+      "Properties": {
+        "name": {
+          "value": "Augustus Bennett",
+          "fields": {
+            "given": "Augustus",
+            "surname": "Bennett",
+            "type": "birth"
+          }
+        },
+        "residence": [
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "george-ricker": {
+      "Properties": {
+        "sex": "male",
+        "name": {
+          "fields": {
+            "given": "George Arthur",
+            "surname": "Ricker",
+            "type": "birth"
+          },
+          "value": "George Arthur Ricker"
+        }
+      },
+      "Notes": [
+        "George Arthur Ricker\n\nCensus\n\t1870\n\t1880\n\t1900\n\t1910\n"
+      ]
+    },
+    "hartley-emery-1934": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "Hartley Leonard",
+            "suffix": "Junior",
+            "surname": "Emery"
+          },
+          "value": "Hartley Leonard Emery Junior"
+        },
+        "residence": [
+          {
+            "date": "1940-04-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1950-04-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "lula-farwell": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Lula",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "Lula Farwell"
+        },
+        "sex": "female"
+      }
+    },
+    "mary-emery": {
+      "Properties": {
+        "name": [
+          {
+            "fields": {
+              "given": "Mary L. D.",
+              "surname": "Emery",
+              "type": "aka"
+            },
+            "value": "Mary L. D. Emery"
+          },
+          {
+            "fields": {
+              "given": "Mary",
+              "surname": "Davis",
+              "type": "birth"
+            },
+            "value": "Mary Davis"
+          }
+        ],
+        "residence": [
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1900-06-01",
+            "value": "place-us-co-park-fairplay"
+          },
+          {
+            "date": "1910-04-01",
+            "value": "place-us-co-park-garo"
+          },
+          {
+            "date": "1930-04-01",
+            "value": "place-us-co-park-buffalo-springs"
+          }
+        ],
+        "sex": "female"
+      },
+      "Notes": [
+        "Mary's birth name was Mary Davis. Her mother was Lizzie H. Davis. Her father had died 12 Feb 1864 or 1867.\n\nJairus and Frances petitioned to adopt her 21 Aug 1869, agreed by Lizzie the same day.\n\nThe adoption was decreed by judge J. J. Bourne on 5 Oct 1869 in probate court in Alfred.\n\nThey changed her name to May [sic] L. D. Emery.\n\nShe represented herself (at least, according to York County copies of deeds) as Mary L. Emery.",
+        "Mary L. D. (Emery) Wilson's son Clifford married Margaret Guptill, daughter of Samuel and Inez (Davis) Guptill.\n\nA cursory search does not reveal an obvious connection between Inez Davis and Lizzie Davis (Mary's birth mother).\n\nThe land that Daniel Wilson bought on Blackberry Hill in 1877 bordered on the land of D. Guptill.",
+        "Mary L. D. Emery\n\nMother: Lizzie H. Davis.\nMaybe\n\tBorn Lizzie Keays\n\tBorn 1845\n\tLived in Lebalon\n\n1860 census Berwick\nhttps://www.familysearch.org/ark:/61903/3:1:33SQ-GB9V-7G2\nLizzie J. Hill 20yo in Berwick 1860 p39 line 12\n2 houses from Orin D. Davis 19yo p38 line 40\n\n1860 census South Berwick\nhttps://www.familysearch.org/ark:/61903/3:1:33SQ-GB9V-WLT\nDavis family next door to Charles Bennett\n\nLizzie J. Hill\nParents Oliver (1804) and Caroline D. (1810) Hill\n\nOrin D. Davis\nParents Daniel M. (1817) and Mary J. Davis (1821)\nMilitary\nhttps://www.familysearch.org/ark:/61903/3:1:3QS7-89ZP-161Z\nhttps://www.familysearch.org/ark:/61903/3:1:3QS7-89ZP-1X9X\nMarried Melvina Thorn 1861\nhttps://www.familysearch.org/ark:/61903/3:1:S3HY-6QH3-C3P\nDied 1870\nhttps://www.findagrave.com/memorial/183446708/orrin-d-davis\n\n\n\n1860 census North Berwick\nhttps://www.familysearch.org/ark:/61903/3:1:33SQ-GB9V-7JM\nJames and May Davis\n\n1860 census Castine, Hancock, Maine\nhttps://www.familysearch.org/ark:/61903/3:1:33SQ-GBS3-F6N?view=index&personArk=%2Fark%3A%2F61903%2F1%3A1%3AMDHK-JGV&action=view&cc=1473181&lang=en\nEliza Key (12) ~1848\nHousehold of John and Margaret Key\n\n1870 census Somersworth\nhttps://www.familysearch.org/ark:/61903/3:1:S3HY-6SV9-7D\nLine 33: Lizzie Key (23) ~1847\n\n1870 census Shapleigh\nhttps://www.familysearch.org/ark:/61903/3:1:S3HY-X482-5C\nLizzie H. Davis (17)\n\n1870 census Cambridge\nhttps://www.familysearch.org/ark:/61903/3:1:S3HT-6LKH-8SF\nLizzie H. Davis (18)\n\nChristening Lebanon\nhttps://www.familysearch.org/ark:/61903/1:1:F4HR-QP2?lang=en\nParents John W. and Mary Davis\n"
+      ]
+    },
+    "susan-griffin": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "Susan",
+            "surname": "Griffin"
+          },
+          "value": "Susan Griffin"
+        },
+        "sex": "female"
+      },
+      "Notes": [
+        "Susie Griffin\n\nCensus\n\t1870\n\t1880\n\t1900\n\t1910\n\t1920\n"
+      ]
+    },
+    "annie-bennett": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Annie",
+            "surname": "Bennett",
+            "type": "birth"
+          },
+          "value": "Annie Bennett"
+        },
+        "residence": [
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "emeline-gilman": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "Emeline",
+            "surname": "Gilman"
+          },
+          "value": "Emeline Gilman"
+        },
+        "residence": [
+          {
+            "date": "1900-06-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "ralph-harrington": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Ralph M.",
+            "surname": "Harrington",
+            "type": "birth"
+          },
+          "value": "Ralph M. Harrington"
+        },
+        "residence": [
+          {
+            "date": "1930-04-01",
+            "value": "place-us-co-park-buffalo-springs"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "david-farwell": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "David Sanborn",
+            "surname": "Farwell"
+          },
+          "value": "David Sanborn Farwell"
+        },
+        "residence": [
+          {
+            "date": "1850-06-01",
+            "value": "place-us-me-oxford-bethel"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "ephraim-shackley": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Ephraim",
+            "surname": "Shackley",
+            "type": "birth"
+          },
+          "value": "Ephraim Shackley"
+        },
+        "sex": "male"
+      },
+      "Notes": [
+        "EPHRAIM SHACKLEY\n\nPARENTS\nFather Daniel Shackley married Peggy (or Margaret) Lord 26 Mar 1792\nWhat sources?\n\n\nMARRIAGE\n4 Dec 1824 intention of marriage (i.e. “publishment”), handwritten in “Records, 1814–1852, Town of So. Berwick,” https://www.familysearch.org/ark:/61903/3:1:3Q9M-C9BJ-F7Y9-T, Page 107, “Dec 4 Mr. Ephraim Shackley & Miss Abigail Hearl both of South Berwick Me.” The next line says “certificate granted,” but like some other entries on the page does not give a date of the certificate. The marriage is recorded on page 376 of the same book.\n\n“Dec 4 Mr. Ephraim Shackley & Miss Abigail Hearl both of South Berwick Me.”\n\nMarriage, handwritten in “Records, 1814–1852, Town of So. Berwick,” https://www.familysearch.org/ark:/61903/3:1:3Q9M-C9BJ-F7RR-B, Page 376, last line.\n\nSouth Berwick, Maine, “Record of Marriages, South Berwick, Maine, 1932–,“ handwritten on a page of printed forms. https://www.familysearch.org/ark:/61903/3:1:3QS7-89N8-S7ZP, Page 24, column 1, entry 3. Gives marriage date 3 Dec 1824.\n\nState copy (delayed returns), handwritten on a printed form, https://www.familysearch.org/ark:/61903/3:1:3QS7-8974-87JK, 31 Dec 1824.\n\n\nCHILDREN\nOlive\n1850 census Worcester David and Olive (Shackley) Crocket https://www.familysearch.org/ark:/61903/3:1:S3HY-69BG-S5\n\tDavid (25), Olive L. (22), Mary R. (2), Emily (7/12), Jane Shackley (20), Luke Wheelock (22)\n\nJane ? b Canton Maine ~1829\nMarriage 10 Dec 1851 to Luke Wheelock, Worcester, age 22 (b 1829) https://www.ancestry.com/imageviewer/collections/2511/images/41262_B139019-00274 record 235, born Canton\n\nMariage, record 235 https://www.ancestry.com/imageviewer/collections/2495/images/40143_271121__0129-00036\n\n1850 census Worcester https://www.familysearch.org/ark:/61903/3:1:S3HY-69BG-S5\n\tWith sister Olive and future husband Luke Wheelock\n\n1860 census Worcester with Luke Wheelock https://www.familysearch.org/ark:/61903/3:1:33S7-9B9J-93HZ\n\n18 Dec 1860 death, Worcester https://www.familysearch.org/ark:/61903/3:1:S3HT-DRRQ-JCX\nJane (Shackley) Wheelock, page 274, record 519\nage 30y 2mo 18d (→ b 30 Sep 1830\ncause pregnancy / consumption of blood\nb Canton Maine\nParents Ephrain + Abby Shackley both born South Berwick\n\nFaG record of burial https://www.findagrave.com/memorial/155916767\n\nJulia Ann\nDaughter Julia Ann born in Bethel, Maine 17 Jul 1832, https://www.familysearch.org/ark:/61903/3:1:3QSQ-G9N7-X4HM, Top right family, Ephraim and Abigail Shackley.\n\nAbigail E. Canwell\nAbbie born Bethel, Maine 1835, https://www.familysearch.org/ark:/61903/3:1:33SQ-GRYX-9L79, Parents Ephraim Sharkley and Abigail Loyd, both born in Woodstock, Maine. Died 1 Jun 1911 at age 75y 6m 22d, which puts her birth Nov 1835. Matches census records. Abbie’s mother’s maiden name was Hearl, not Loyd. Her paternal grandmother’s name was Lord, so perhaps that’s where the error comes from.\n\nJerusha Morse b 1837 Harrison, Maine\n\nNewton, Massachusetts, “Newton, Deaths, 1863–1877, Book 4,” page 1, 1863, record 133, Jerusha Morse, record of death; imaged, “Massachusetts, Town Clerk, Vital and Town Records, 1626-2001” FamilySearch (https://www.familysearch.org/ark:/61903/3:1:3QS7-L979-H4G5 : accessed 17 Aug 2026).\n\nd Newton 16 Nov 1863, Age 26y 2m. Born Harrison, Me. Parents Ephraim & Abbie Shackley, both born Berwick Me.\n\nMassachusetts, “22nd Registrations, 1863, Deaths Vol 166, Hampshire - Plymouth,” page 147, record 127, Jerusha Morse, record of death; imaged, “Births, marriages (1841-1895), and deaths (1841-1899),” FamilySearch (https://www.familysearch.org/ark:/61903/3:1:S3HY-68Y4-QZ : accessed 17 Aug 2026).\n\nJerusha Morse d Newton 16 Nov 1863, typhoid fever. Age 26y 2m (= b Sep 1837). Parents Ephraim and Abbie Shackley both born Berwick, Maine.\n\nBirths, marriages (1841-1895), and deaths (1841-1899),” database with images, FamilySearch (https://www.familysearch.org/en/search/catalog/koha:23177 ).\n\nAseneth B. Shackley b 1843 Hartford ME d 8 Jan 1864 Newton, Mass typhoid fever.\n\nNewton, Massachusetts, “Newton, Deaths, 1863–1877, Book 4,” page 2, 1864, record 4, Aseneth B. Shackley, record of death; imaged “Massachusetts, Town Clerk, Vital and Town Records, 1626-2001” FamilySearch (https://www.familysearch.org/ark:/61903/3:1:3QS7-9979-HHJK : accessed 17 Aug 2026).\n\nd Newton 8 Jan 1864, age 21 (= b 1842–3). Born Hartford, Me. Parents Ephraim & Abby (Earle) both born South Berwick Me.\n\nMassachusetts, “23rd Registrations, 1864, Deaths Vol 175, Hampshire - Plymouth,” page 156, record 4, Aseneth B. Shackley, record of death; imaged, “Births, marriages (1841-1895), and deaths (1841-1899),” FamilySearch (https://www.familysearch.org/ark:/61903/3:1:S3HY-6M8S-FW6 : accessed 17 Aug 2026).\n\nd Newton 8 Jan 1864. Born Hartford, Maine. Parents Ephraim and Abby (Earle) born S. Berwick.\n\n\nCENSUS\n1840 census MAYBE Harrison, Cumberland, Maine https://www.familysearch.org/ark:/61903/3:1:33S7-9YY8-D6P\n\n1850 census Canton, Oxford, Maine, https://www.familysearch.org/ark:/61903/3:1:S3HY-DHNS-VK\n\tEphraim (50), Abigail (50), Abigail (14), Jerusha (12), Aseneth (7).\n\tSame dwelling as Ephraim’s parents Daniel and Margaret (“Peggy”) Shackley.\n\tAn Abigail Shackley also in Hartford in Daniel Thomas household https://www.familysearch.org/ark:/61903/3:1:S3HY-DHNS-Z1\n\n1860 census Woodstock, Oxford, Maine, https://www.familysearch.org/ark:/61903/3:1:33S7-9BSS-3T2\n\tEphraim, Abba, Jerusha (22) and Aseneth (17).\n\n1870 census Hartford, Oxford, Maine, https://www.familysearch.org/ark:/61903/3:1:S3HY-DTFW-H8V\n\tEphraim (71), Abigail. Line 18. His age was 71, which would put his birth at 1798–99. Born in Maine.\n\n1880 Abigal Shackford, mother-in-law in Charles Bennett household in South Berwick\n\n\nDEEDS\nhttps://www.familysearch.org/ark:/61903/3:1:3Q9M-C3M5-KKF7\n\n\nOTHER\nHighway surveyor https://www.familysearch.org/ark:/61903/3:1:3Q9M-C34Y-V9BJ\n\n1848 Woodstock Vote (13) to educate Ephraim’s scholars https://www.familysearch.org/ark:/61903/3:1:3Q9M-C34Y-VSKL\n\n1852 Vote to lay out a road to Ephraim’s house https://www.familysearch.org/ark:/61903/3:1:3Q9M-C34Y-VQVD\n\nAged people in Hartford: https://www.newspapers.com/image/828076938\n\nDeeds https://www.newspapers.com/image/882180977\n\n\n"
+      ]
+    },
+    "annett-farwell": {
+      "Properties": {
+        "residence": [
+          {
+            "date": "1850-06-01",
+            "value": "place-us-me-oxford-bethel"
+          }
+        ],
+        "sex": "female",
+        "name": {
+          "fields": {
+            "given": "Annett",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "Annett Farwell"
+        }
+      },
+      "Notes": [
+        "What is her name? In the list of births of Samuel and Fanny's children the name looks like Antha Nette Masiller.\nSome (unevaluated) genealogies say Annette, and some say Antoinette."
+      ]
+    },
+    "david-chick": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "David Steven",
+            "surname": "Chick",
+            "type": "birth"
+          },
+          "value": "David Steven Chick"
+        },
+        "residence": [
+          {
+            "date": "1950-04-01",
+            "value": "place-us-nh-strafford-somersworth"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "freeman-gowen": {
+      "Properties": {
+        "sex": "male",
+        "name": {
+          "fields": {
+            "given": "Freeman H.",
+            "surname": "Gowen",
+            "type": "birth"
+          },
+          "value": "Freeman H. Gowen"
+        }
+      }
+    },
+    "julia-shackley": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Julia Ann",
+            "surname": "Shackley",
+            "type": "birth"
+          },
+          "value": "Julia Ann Shackley"
+        },
+        "residence": [
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "female"
+      },
+      "Notes": [
+        "Julia Ann Shackley.\n\nCensus\n\t1850 (age 18) where?\n\n1887 marriage of daughter Susie J\n\thttps://www.familysearch.org/ark:/61903/3:1:S3HT-DZPQ-D5T\n\thttps://www.familysearch.org/ark:/61903/3:1:S3HT-DZPQ-6N9\n\n1893 marriage of son Albert\n\thttps://www.familysearch.org/ark:/61903/3:1:9398-Q13G-CB\n\thttps://www.familysearch.org/ark:/61903/3:1:9398-Q13L-2Y\n\n20 Mar 1896 death\n\thttps://www.familysearch.org/ark:/61903/3:1:9398-Q132-MH\n\tWrong surname for father (shackford)\n\tAge at death exactly matches birth date 17 Jul 1832\n\tBirth place matches.\n\nCemetery record\n\thttps://www.familysearch.org/ark:/61903/3:1:3QSQ-G9F3-XTD3\n\n1897 death of daughter Ida Joy\n\thttps://www.familysearch.org/ark:/61903/3:1:9398-4D96-SY\n\n1898 husband Charles 2nd Marriage\n\thttps://www.familysearch.org/ark:/61903/3:1:9398-Q13K-2F\n\thttps://www.familysearch.org/ark:/61903/3:1:9398-Q13K-RX\n\n1903 son Orin 2nd marriage, record 357\n\thttps://www.familysearch.org/ark:/61903/3:1:S3HT-65T9-PHZ\n\tJulia A. Shackley"
+      ]
+    },
+    "william-farwell": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "William Swift",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "William Swift Farwell"
+        },
+        "sex": "male"
+      }
+    },
+    "sarah-bennett": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "surname": "Bennett",
+            "type": "birth",
+            "given": "Sarah A."
+          },
+          "value": "Sarah A. Bennett"
+        },
+        "residence": [
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "frances-wilson": {
+      "Properties": {
+        "residence": [
+          {
+            "date": "1900-06-01",
+            "value": "place-us-co-park-fairplay"
+          },
+          {
+            "date": "1910-04-01",
+            "value": "place-us-co-park-garo"
+          },
+          {
+            "date": "1930-04-01",
+            "value": "place-us-co-park-buffalo-springs"
+          }
+        ],
+        "sex": "female",
+        "name": {
+          "fields": {
+            "given": "Frances L",
+            "surname": "Wilson",
+            "type": "birth"
+          },
+          "value": "Frances L Wilson"
+        }
+      },
+      "Notes": [
+        "Frances, like her mother, married a man 17 years her senior.\n\nThey married ~1920. The 1930 census says she is 29 and married at 20. That puts the marriage at 1921. But the 1910 census says she was born in 1899.",
+        "Frances L (Wilson) Harrington\n\n1940 census, Park County, Colorado, enumeration district 47-12, Hartsel Precinct 8, sheet 2A, household 33, lines 31–33;\nhttps://www.familysearch.org/ark:/61903/3:1:3QS7-89MR-D8M\nLine 31 Ralph Harrington (56, informant)k head, rancher on cattle ranch, born in Colorado.\nLine 32 Francis Harrington (40), wife of Ralph Harrington, born in Colorado.\nLine 33 Frank Harrington (17), son of Ralph Harrington, born in Colorado.\n\n\nMarriage\nhttps://www.familysearch.org/ark:/61903/1:1:KNQ4-G8V\n"
+      ]
+    },
+    "jackson-chick": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Jackson Freeman",
+            "nickname": "Jack",
+            "surname": "Chick",
+            "type": "birth"
+          },
+          "value": "Jackson Freeman \"Jack\" Chick"
+        },
+        "occupation": "Baker (1933)",
+        "residence": [
+          {
+            "value": "place-us-me-york-north-berwick",
+            "date": "1910-04-15"
+          },
+          {
+            "date": "1920-01-01",
+            "value": "place-us-ma-essex-amesbury"
+          },
+          {
+            "date": "1930-04-01",
+            "value": "place-us-me-york-north-berwick"
+          },
+          {
+            "date": "1940-04-01",
+            "value": "place-us-nh-strafford-somersworth"
+          },
+          {
+            "date": "1950-04-01",
+            "value": "place-us-nh-strafford-somersworth"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "edith-gowen": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Edith M.",
+            "surname": "Gowen",
+            "type": "birth"
+          },
+          "value": "Edith M. Gowen"
+        },
+        "residence": [
+          {
+            "date": "1900-06-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "marcia-sillon": {
+      "Properties": {
+        "residence": [
+          {
+            "value": "place-us-me-york-north-berwick",
+            "date": "1910-02-21"
+          },
+          {
+            "date": "1910-04-15",
+            "value": "place-us-me-york-north-berwick"
+          },
+          {
+            "date": "1920-01-01",
+            "value": "place-us-ma-essex-amesbury"
+          },
+          {
+            "date": "1930-04-01",
+            "value": "place-us-me-york-north-berwick"
+          },
+          {
+            "date": "1940-04-01",
+            "value": "place-us-me-york-north-berwick"
+          },
+          {
+            "date": "1950-04-01",
+            "value": "place-us-me-york-north-berwick"
+          }
+        ],
+        "sex": "female",
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "Marcia Ethel",
+            "surname": "Sillon"
+          },
+          "value": "Marcia Ethel Sillon"
+        }
+      },
+      "Notes": [
+        "Marcia Ethel Sillon\n\nCensus\n\t1900\n\t1910\n\t1920\n"
+      ]
+    },
+    "uranie-emery": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Uranie M.",
+            "surname": "Emery",
+            "type": "birth"
+          },
+          "value": "Uranie M. Emery"
+        },
+        "sex": "female"
+      }
+    },
+    "fanny-swift": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Fanny",
+            "surname": "Swift",
+            "type": "birth"
+          },
+          "value": "Fanny Swift"
+        },
+        "residence": [
+          {
+            "value": "place-us-me-oxford-bethel",
+            "date": "1850-06-01"
+          },
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-oxford-bethel"
+          },
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "lucy-emery": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Lucy Ann",
+            "surname": "Emery",
+            "type": "birth"
+          },
+          "value": "Lucy Ann Emery"
+        },
+        "sex": "female"
+      }
+    },
+    "richard-farwell": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Richard",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "Richard Farwell"
+        },
+        "sex": "male"
+      }
+    },
+    "edward-rolfe": {
+      "Properties": {
+        "sex": "male",
+        "name": {
+          "fields": {
+            "given": "Edward Austin",
+            "surname": "Rolfe",
+            "type": "birth"
+          },
+          "value": "Edward Austin Rolfe"
+        },
+        "occupation": "Shoe Ape (?) (1933)",
+        "residence": [
+          {
+            "date": "1920-01-01",
+            "value": "place-us-nh-strafford-somersworth"
+          },
+          {
+            "date": "1930-04-01",
+            "value": "place-us-nh-strafford-somersworth"
+          }
+        ]
+      },
+      "Notes": [
+        "Edward Austin Rolfe\n\nCensus\n\t1871\n\t1881\n\t1900\n\t1910\n\t1920\n\t1930\n"
+      ]
+    },
+    "rhoda-staples": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Rhoda",
+            "surname": "Staples",
+            "type": "birth"
+          },
+          "value": "Rhoda Staples"
+        },
+        "residence": [
+          {
+            "date": "1850-06-01",
+            "value": "place-us-me-york-eliot"
+          },
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-eliot"
+          },
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-eliot"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "emma-mignault": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "surname": "Mignault",
+            "type": "birth",
+            "given": "Emma Emily"
+          },
+          "value": "Emma Emily Mignault"
+        },
+        "residence": [
+          {
+            "date": "1920-01-01",
+            "value": "place-us-nh-strafford-somersworth"
+          },
+          {
+            "date": "1930-04-01",
+            "value": "place-us-nh-strafford-somersworth"
+          },
+          {
+            "date": "1940-04-01",
+            "value": "place-us-nh-strafford-somersworth"
+          },
+          {
+            "date": "1950-04-01",
+            "value": "place-us-me-york-north-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "judith-chick": {
+      "Properties": {
+        "residence": [
+          {
+            "value": "place-us-nh-strafford-somersworth",
+            "date": "1950-04-01"
+          }
+        ],
+        "sex": "female",
+        "name": {
+          "fields": {
+            "nickname": "Judy",
+            "surname": "Chick",
+            "type": "birth",
+            "given": "Judith Frances"
+          },
+          "value": "Judith Frances \"Judy\" Chick"
+        }
+      }
+    },
+    "sarah-0b49e56f": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "surname": "—",
+            "type": "birth",
+            "given": "Sarah"
+          },
+          "value": "Sarah —"
+        },
+        "residence": [
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "olive-huntress": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Olive Ann",
+            "surname": "Huntress",
+            "type": "birth"
+          },
+          "value": "Olive Ann Huntress"
+        },
+        "sex": "female"
+      },
+      "Notes": [
+        "Olive Ann Huntress\n\n15 Apr 1869 died\nCemetery record\nhttps://www.familysearch.org/ark:/61903/3:1:3QSQ-G9FQ-S1J4\nhttps://www.findagrave.com/memorial/80942864\n\n"
+      ]
+    },
+    "john-george": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "John W.",
+            "nickname": "Johnny",
+            "surname": "George",
+            "type": "birth"
+          },
+          "value": "John W. \"Johnny\" George"
+        },
+        "residence": [
+          {
+            "date": "1940-04-01",
+            "value": "place-us-me-york-north-berwick"
+          },
+          {
+            "date": "1950-04-01",
+            "value": "place-us-me-york-north-berwick"
+          }
+        ],
+        "sex": "male"
+      }
+    },
+    "emma-bennett": {
+      "Properties": {
+        "residence": [
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "date": "1900-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1910-04-15",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1920-01-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "female",
+        "name": {
+          "fields": {
+            "given": "Emma L.",
+            "surname": "Bennett",
+            "type": "birth"
+          },
+          "value": "Emma L. Bennett"
+        }
+      }
+    },
+    "samuel-farwell": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "surname": "Farwell",
+            "type": "birth",
+            "given": "Samuel"
+          },
+          "value": "Samuel Farwell"
+        },
+        "sex": "male"
+      }
+    },
+    "ida-bennett": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "type": "birth",
+            "given": "Ida F.",
+            "surname": "Bennett"
+          },
+          "value": "Ida F. Bennett"
+        },
+        "residence": [
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-south-berwick"
+          },
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-south-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "huldah-ricker": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Huldah Chick",
+            "surname": "Ricker",
+            "type": "birth"
+          },
+          "value": "Huldah Chick Ricker"
+        },
+        "residence": [
+          {
+            "date": "1920-01-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "value": "place-us-me-york-berwick",
+            "date": "1930-04-01"
+          },
+          {
+            "date": "1940-04-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1950-04-01",
+            "value": "place-us-me-york-berwick"
+          }
+        ],
+        "sex": "female"
+      }
+    },
+    "foster-farwell": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Foster",
+            "surname": "Farwell",
+            "type": "birth"
+          },
+          "value": "Foster Farwell"
+        },
+        "sex": "male"
+      }
+    },
+    "emma-gowen": {
+      "Properties": {
+        "sex": "female",
+        "name": {
+          "fields": {
+            "given": "Emma Belle",
+            "surname": "Gowen",
+            "type": "birth"
+          },
+          "value": "Emma Belle Gowen"
+        },
+        "residence": [
+          {
+            "date": "1860-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1870-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1880-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "date": "1900-06-01",
+            "value": "place-us-me-york-berwick"
+          },
+          {
+            "value": "place-us-me-york-north-berwick",
+            "date": "1910-04-15"
+          },
+          {
+            "date": "1920-01-01",
+            "value": "place-us-ma-middlesex-somerville"
+          }
+        ]
+      }
+    },
+    "dale-emery": {
+      "Properties": {
+        "name": {
+          "fields": {
+            "given": "Dale Hartley",
+            "surname": "Emery"
+          },
+          "value": "Dale Hartley Emery"
+        },
+        "sex": "male"
+      }
+    }
+  }
+}
