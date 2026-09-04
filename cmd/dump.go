@@ -44,72 +44,72 @@ func init() {
 }
 
 func dump(c *cobra.Command, entityIDs []string) error {
-	archive, err := load.Load(archivePath)
+	archiveIn, err := load.Load(archivePath)
 	if err != nil {
 		return err
 	}
 
 	var selectedEntities bool
-	filteredArchive := new(glx.GLXFile)
+	archiveOut := new(glx.GLXFile)
 
 	if dumpAssertions {
-		filteredArchive.Assertions = archive.Assertions
+		archiveOut.Assertions = archiveIn.Assertions
 		selectedEntities = true
 	}
 
 	if dumpCitations {
-		filteredArchive.Citations = archive.Citations
+		archiveOut.Citations = archiveIn.Citations
 		selectedEntities = true
 	}
 
 	if dumpEvents {
-		filteredArchive.Events = archive.Events
+		archiveOut.Events = archiveIn.Events
 		selectedEntities = true
 	}
 
 	if dumpMedia {
-		filteredArchive.Media = archive.Media
+		archiveOut.Media = archiveIn.Media
 		selectedEntities = true
 	}
 
 	if dumpPersons {
-		filteredArchive.Persons = archive.Persons
+		archiveOut.Persons = archiveIn.Persons
 		selectedEntities = true
 	}
 
 	if dumpPlaces {
-		filteredArchive.Places = archive.Places
+		archiveOut.Places = archiveIn.Places
 		selectedEntities = true
 	}
 
 	if dumpRelationships {
-		filteredArchive.Relationships = archive.Relationships
+		archiveOut.Relationships = archiveIn.Relationships
 		selectedEntities = true
 	}
 
 	if dumpRepositories {
-		filteredArchive.Repositories = archive.Repositories
+		archiveOut.Repositories = archiveIn.Repositories
 		selectedEntities = true
 	}
 
 	if dumpSources {
-		filteredArchive.Sources = archive.Sources
+		archiveOut.Sources = archiveIn.Sources
 		selectedEntities = true
 	}
 
 	if len(entityIDs) > 0 {
-		unknowns := oollectEntities(archive, filteredArchive, entityIDs)
+		unknowns := oollectEntities(archiveIn, archiveOut, entityIDs)
 		if len(unknowns) > 0 {
 			return fmt.Errorf("Unknown IDs: %s", strings.Join(unknowns, ", "))
 		}
 		selectedEntities = true
 	}
 
-	if selectedEntities {
-		archive = filteredArchive
+	if !selectedEntities {
+		archiveOut = archiveIn
 	}
 
-	return json.MarshalWrite(os.Stdout, archive,
+	return json.MarshalWrite(os.Stdout, archiveOut,
 		jsontext.WithIndent("  "),
 		json.OmitZeroStructFields(true))
 }
