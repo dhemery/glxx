@@ -1,6 +1,6 @@
 module github.com/dhemery/glxx
 
-go 1.27.0
+go 1.27.1
 
 require (
 	github.com/genealogix/glx v0.0.0-beta.11
