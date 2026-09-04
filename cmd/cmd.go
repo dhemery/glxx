@@ -28,6 +28,7 @@ func init() {
 	}
 	glxxCmd.PersistentFlags().StringVarP(&archivePath, "archive", "a", archivePath, "the `dir` of the archive")
 
+	glxxCmd.AddCommand(describeCmd)
 	glxxCmd.AddCommand(dumpCmd)
 }
 
