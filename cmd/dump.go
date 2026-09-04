@@ -3,7 +3,9 @@ package cmd
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"fmt"
 	"os"
+	"strings"
 
 	"github.com/dhemery/glxx/load"
 	"github.com/genealogix/glx/go-glx"
@@ -14,7 +16,6 @@ var dumpCmd = &cobra.Command{
 	Use:   "dump",
 	Short: "Dump a GENEALOGIX archive as JSON.",
 	Long:  "Dump a GENEALOGIX archive as JSON.",
-	Args:  cobra.ExactArgs(0),
 	RunE:  dump,
 }
 
@@ -42,63 +43,145 @@ func init() {
 	dumpCmd.Flags().BoolVar(&dumpSources, "sources", dumpSources, "Dump sources")
 }
 
-func dump(c *cobra.Command, args []string) error {
+func dump(c *cobra.Command, entityIDs []string) error {
 	archive, err := load.Load(archivePath)
 	if err != nil {
 		return err
 	}
 
-	var appliedFilters bool
+	var selectedEntities bool
 	filteredArchive := new(glx.GLXFile)
 
 	if dumpAssertions {
 		filteredArchive.Assertions = archive.Assertions
-		appliedFilters = true
+		selectedEntities = true
 	}
 
 	if dumpCitations {
 		filteredArchive.Citations = archive.Citations
-		appliedFilters = true
+		selectedEntities = true
 	}
 
 	if dumpEvents {
 		filteredArchive.Events = archive.Events
-		appliedFilters = true
+		selectedEntities = true
 	}
 
 	if dumpMedia {
 		filteredArchive.Media = archive.Media
-		appliedFilters = true
+		selectedEntities = true
 	}
 
 	if dumpPersons {
 		filteredArchive.Persons = archive.Persons
-		appliedFilters = true
+		selectedEntities = true
 	}
 
 	if dumpPlaces {
 		filteredArchive.Places = archive.Places
-		appliedFilters = true
+		selectedEntities = true
 	}
 
 	if dumpRelationships {
 		filteredArchive.Relationships = archive.Relationships
-		appliedFilters = true
+		selectedEntities = true
 	}
 
 	if dumpRepositories {
 		filteredArchive.Repositories = archive.Repositories
-		appliedFilters = true
+		selectedEntities = true
 	}
 
 	if dumpSources {
 		filteredArchive.Sources = archive.Sources
-		appliedFilters = true
+		selectedEntities = true
 	}
 
-	if appliedFilters {
+	if len(entityIDs) > 0 {
+		unknowns := oollectEntities(archive, filteredArchive, entityIDs)
+		if len(unknowns) > 0 {
+			return fmt.Errorf("Unknown IDs: %s", strings.Join(unknowns, ", "))
+		}
+		selectedEntities = true
+	}
+
+	if selectedEntities {
 		archive = filteredArchive
 	}
 
-	return json.MarshalWrite(os.Stdout, archive, jsontext.WithIndent("  "), json.OmitZeroStructFields(true))
+	return json.MarshalWrite(os.Stdout, archive,
+		jsontext.WithIndent("  "),
+		json.OmitZeroStructFields(true))
+}
+
+func oollectEntities(in *glx.GLXFile, out *glx.GLXFile, ids []string) []string {
+	var unknowns = []string{}
+
+	for _, id := range ids {
+		if assertions, ok := in.Assertions[id]; ok {
+			if out.Assertions == nil {
+				out.Assertions = map[string]*glx.Assertion{}
+			}
+			out.Assertions[id] = assertions
+			continue
+		}
+		if citation, ok := in.Citations[id]; ok {
+			if out.Citations == nil {
+				out.Citations = map[string]*glx.Citation{}
+			}
+			out.Citations[id] = citation
+			continue
+		}
+		if event, ok := in.Events[id]; ok {
+			if out.Events == nil {
+				out.Events = map[string]*glx.Event{}
+			}
+			out.Events[id] = event
+			continue
+		}
+		if media, ok := in.Media[id]; ok {
+			if out.Media == nil {
+				out.Media = map[string]*glx.Media{}
+			}
+			out.Media[id] = media
+			continue
+		}
+		if person, ok := in.Persons[id]; ok {
+			if out.Persons == nil {
+				out.Persons = map[string]*glx.Person{}
+			}
+			out.Persons[id] = person
+			continue
+		}
+		if place, ok := in.Places[id]; ok {
+			if out.Places == nil {
+				out.Places = map[string]*glx.Place{}
+			}
+			out.Places[id] = place
+			continue
+		}
+		if relationship, ok := in.Relationships[id]; ok {
+			if out.Relationships == nil {
+				out.Relationships = map[string]*glx.Relationship{}
+			}
+			out.Relationships[id] = relationship
+			continue
+		}
+		if repository, ok := in.Repositories[id]; ok {
+			if out.Repositories == nil {
+				out.Repositories = map[string]*glx.Repository{}
+			}
+			out.Repositories[id] = repository
+			continue
+		}
+		if source, ok := in.Sources[id]; ok {
+			if out.Sources == nil {
+				out.Sources = map[string]*glx.Source{}
+			}
+			out.Sources[id] = source
+			continue
+		}
+		unknowns = append(unknowns, id)
+	}
+	return unknowns
 }
