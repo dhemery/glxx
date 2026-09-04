@@ -57,11 +57,28 @@ func describe(_ *cobra.Command, ids []string) error {
 func describeEvent(a *glx.GLXFile, e *glx.Event) error {
 	fmt.Println("      Title : ", e.Title)
 	fmt.Println("       Type : ", e.Type)
-	fmt.Println("      Place : ", e.PlaceID)
+	fmt.Println("      Place : ", fullPlaceName(a, e.PlaceID))
 	fmt.Println("       Date : ", e.Date)
 	fmt.Println("Participants:")
 	for _, p := range e.Participants {
 		fmt.Printf("    %s: %s\n", p.Role, p.Person)
 	}
 	return nil
+}
+
+func fullPlaceName(a *glx.GLXFile, id string) string {
+	p, ok := a.Places[id]
+	if !ok {
+		return id
+	}
+
+	if p.Name == "" {
+		return "nameless:" + id
+	}
+
+	if p.ParentID == "" {
+		return p.Name
+	}
+
+	return p.Name + ", " + fullPlaceName(a, p.ParentID)
 }
