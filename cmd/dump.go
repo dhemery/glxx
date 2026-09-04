@@ -22,7 +22,7 @@ var dumpCmd = &cobra.Command{
 }
 
 func dump(c *cobra.Command, args []string) error {
-	archive, err := load.Load(archivePath)
+	archive, err := load.Load(*archivePath)
 	if err != nil {
 		return err
 	}

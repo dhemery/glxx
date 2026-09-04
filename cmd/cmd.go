@@ -20,13 +20,15 @@ var glxxCmd = &cobra.Command{
 	},
 }
 
-var archivePath = "."
+var archivePath *string
 
 func init() {
+	defaultArchivePath := "."
+
 	if p := os.Getenv("GLXX_ARCHIVE"); p != "" {
-		archivePath = p
+		defaultArchivePath = p
 	}
-	glxxCmd.PersistentFlags().StringP("archive", "a", os.Getenv("GLXX_ARCHIVE"), "the `dir` of the archive")
+	archivePath = glxxCmd.PersistentFlags().StringP("archive", "a", defaultArchivePath, "the `dir` of the archive")
 }
 
 // Execute runs the glxx command.

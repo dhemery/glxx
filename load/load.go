@@ -10,8 +10,12 @@ import (
 	glx "github.com/genealogix/glx/go-glx"
 )
 
-func Load(root string) (*glx.GLXFile, error) {
-	files, err := readFiles(root)
+func Load(archivePath string) (*glx.GLXFile, error) {
+	if archivePath == "" {
+		return nil, fmt.Errorf("empty archive option")
+	}
+
+	files, err := readFiles(archivePath)
 	if err != nil {
 		return nil, err
 	}
