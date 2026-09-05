@@ -63,7 +63,7 @@ func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
 
 	printReportItem("Title:", e.Title)
 	printReportItem("Type:", e.Type)
-	printReportItem("Place:", placeName(a, e.PlaceID))
+	printPlaceReference(a, "Place:", e.PlaceID)
 	printReportItem("Date:", e.Date)
 
 	printSectionHeader("Participants")
@@ -104,8 +104,13 @@ func printRelationshipEvent(a *glx.GLXFile, label, id string) {
 
 	printReportItem("Title:", e.Title)
 	printReportItem("Type:", e.Type)
-	printReportItem("Place:", placeName(a, e.PlaceID))
+	printPlaceReference(a, "Place:", e.PlaceID)
 	printReportItem("Date:", e.Date)
+}
+
+func printPlaceReference(a *glx.GLXFile, label, id string) {
+	printReportItem("Place:", placeName(a, id))
+	printReportItem("  id:", id)
 }
 
 const unspecifiedValue = "—"
@@ -147,8 +152,13 @@ func personName(a *glx.GLXFile, id string) string {
 
 func printParticipation(a *glx.GLXFile, personID string, role string) {
 	label := strings.ToUpper(role[:1]) + role[1:] + ":"
+	printPersonReference(a, label, personID)
+}
+
+func printPersonReference(a *glx.GLXFile, label, personID string) {
 	name := personName(a, personID)
 	printReportItem(label, name)
+	printReportItem("  id:", personID)
 }
 
 func printReportHeader(typ, title string) {
@@ -168,7 +178,6 @@ func printSectionHeader(title string) {
 }
 
 func formattedUnknownID(id, typ string) string {
-
 	return fmt.Sprintf("unknown %s id %s", typ, id)
 }
 
