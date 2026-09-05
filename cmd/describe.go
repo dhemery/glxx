@@ -116,8 +116,9 @@ func describeSource(a *glx.GLXFile, id string, s *glx.Source) {
 	printReportItem("Date:", s.Date.String())
 	printReportItem("Language:", s.Language)
 
+	printRepositoryReference(a, "Repository:", s.RepositoryID)
+
 	// printReportItem("Media:", s.Title)
-	// printReportItem("Repository:", s.Title)
 
 	fmt.Println()
 }
@@ -141,12 +142,34 @@ func printRelationshipEvent(a *glx.GLXFile, label, id string) {
 	printReportItem("Date:", e.Date.String())
 }
 
+func printRepositoryReference(a *glx.GLXFile, label, id string) {
+	printReportItem(label, repositoryName(a, id))
+	printReportItem("  id:", id)
+}
+
 func printPlaceReference(a *glx.GLXFile, label, id string) {
-	printReportItem("Place:", placeName(a, id))
+	printReportItem(label, placeName(a, id))
 	printReportItem("  id:", id)
 }
 
 const unspecifiedValue = "—"
+
+func repositoryName(a *glx.GLXFile, id string) string {
+	if id == "" {
+		return unspecifiedValue
+	}
+
+	p, ok := a.Repositories[id]
+	if !ok {
+		return formattedUnknownID(id, "repository")
+	}
+
+	if p.Name == "" {
+		return formattedUnnamedEntity(id, "repository")
+	}
+
+	return p.Name
+}
 
 func placeName(a *glx.GLXFile, id string) string {
 	if id == "" {
