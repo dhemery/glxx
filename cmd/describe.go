@@ -49,11 +49,12 @@ func describe(_ *cobra.Command, ids []string) error {
 		return nil
 	}
 	if r, ok := archive.Repositories[id]; ok {
-		describeRepository(archive, id, r)
+		describeRepository(id, r)
 		return nil
 	}
-	if _, ok := archive.Sources[id]; ok {
-		return fmt.Errorf("Not implemented: describe source")
+	if s, ok := archive.Sources[id]; ok {
+		describeSource(archive, id, s)
+		return nil
 	}
 
 	return fmt.Errorf("Unknown ID: %s", id)
@@ -65,7 +66,7 @@ func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
 	printReportItem("Title:", e.Title)
 	printReportItem("Type:", e.Type)
 	printPlaceReference(a, "Place:", e.PlaceID)
-	printReportItem("Date:", e.Date)
+	printReportItem("Date:", e.Date.String())
 
 	printSectionHeader("Participants")
 	for _, p := range e.Participants {
@@ -90,7 +91,7 @@ func describeRelationship(a *glx.GLXFile, id string, r *glx.Relationship) {
 	fmt.Println()
 }
 
-func describeRepository(a *glx.GLXFile, id string, r *glx.Repository) {
+func describeRepository(id string, r *glx.Repository) {
 	printReportHeader("Repository", id)
 
 	printReportItem("Name:", r.Name)
@@ -101,6 +102,22 @@ func describeRepository(a *glx.GLXFile, id string, r *glx.Repository) {
 	printReportItem("Postal Code:", r.PostalCode)
 	printReportItem("Country:", r.Country)
 	printReportItem("Website:", r.Website)
+
+	fmt.Println()
+}
+
+func describeSource(a *glx.GLXFile, id string, s *glx.Source) {
+	printReportHeader("Source", id)
+
+	printReportItem("Title:", s.Title)
+	for _, author := range s.Authors {
+		printReportItem("Author:", author)
+	}
+	printReportItem("Date:", s.Date.String())
+	printReportItem("Language:", s.Language)
+
+	// printReportItem("Media:", s.Title)
+	// printReportItem("Repository:", s.Title)
 
 	fmt.Println()
 }
@@ -121,7 +138,7 @@ func printRelationshipEvent(a *glx.GLXFile, label, id string) {
 	printReportItem("Title:", e.Title)
 	printReportItem("Type:", e.Type)
 	printPlaceReference(a, "Place:", e.PlaceID)
-	printReportItem("Date:", e.Date)
+	printReportItem("Date:", e.Date.String())
 }
 
 func printPlaceReference(a *glx.GLXFile, label, id string) {
@@ -181,7 +198,7 @@ func printReportHeader(typ, title string) {
 	fmt.Printf("=== %s: %s ===\n\n", typ, title)
 }
 
-func printReportItem(label string, value any) {
+func printReportItem(label string, value string) {
 	if value == "" {
 		value = unspecifiedValue
 	}
