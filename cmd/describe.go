@@ -28,8 +28,9 @@ func describe(_ *cobra.Command, ids []string) error {
 	if _, ok := archive.Assertions[id]; ok {
 		return fmt.Errorf("Not implemented: describe assertions")
 	}
-	if _, ok := archive.Citations[id]; ok {
-		return fmt.Errorf("Not implemented: describe citations")
+	if c, ok := archive.Citations[id]; ok {
+		describeCitation(archive, id, c)
+		return nil
 	}
 	if e, ok := archive.Events[id]; ok {
 		describeEvent(archive, id, e)
@@ -59,6 +60,18 @@ func describe(_ *cobra.Command, ids []string) error {
 	}
 
 	return fmt.Errorf("Unknown ID: %s", id)
+}
+
+func describeCitation(a *glx.GLXFile, id string, c *glx.Citation) {
+	printReportHeader("Citation", id)
+
+	printSourceReference(a, "Source:", c.SourceID)
+	printRepositoryReference(a, "Repository:", c.RepositoryID)
+	for _, m := range c.Media {
+		printMediaReference(a, "Media:", m)
+	}
+
+	fmt.Println()
 }
 
 func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
@@ -132,7 +145,9 @@ func describeSource(a *glx.GLXFile, id string, s *glx.Source) {
 
 	printRepositoryReference(a, "Repository:", s.RepositoryID)
 
-	// printReportItem("Media:", s.Title)
+	for _, m := range s.Media {
+		printMediaReference(a, "Media:", m)
+	}
 
 	fmt.Println()
 }
@@ -156,36 +171,30 @@ func printRelationshipEvent(a *glx.GLXFile, label, id string) {
 	printReportItem("Date:", e.Date.String())
 }
 
+func printMediaReference(a *glx.GLXFile, label, id string) {
+	printReference(label, id, mediaTitle(a, id))
+}
+
 func printPlaceReference(a *glx.GLXFile, label, id string) {
-	printReportItem(label, placeName(a, id))
-	printReportItem("  id:", id)
+	printReference(label, id, placeName(a, id))
 }
 
 func printRepositoryReference(a *glx.GLXFile, label, id string) {
-	printReportItem(label, repositoryName(a, id))
-	printReportItem("  id:", id)
+	name := repositoryName(a, id)
+	if name == unspecifiedValue {
+		printReportItem(label, name)
+		return
+	}
+	printReference(label, id, name)
 }
 
 func printSourceReference(a *glx.GLXFile, label, id string) {
-	printReportItem(label, sourceTitle(a, id))
-	printReportItem("  id:", id)
+	printReference(label, id, sourceTitle(a, id))
 }
 
-func repositoryName(a *glx.GLXFile, id string) string {
-	if id == "" {
-		return unspecifiedValue
-	}
-
-	p, ok := a.Repositories[id]
-	if !ok {
-		return unknown(id, "repository")
-	}
-
-	if p.Name == "" {
-		return unnamed(id, "repository")
-	}
-
-	return p.Name
+func printReference(label, id, value string) {
+	printReportItem(label, value)
+	printReportItem("  id:", id)
 }
 
 func placeName(a *glx.GLXFile, id string) string {
@@ -209,6 +218,23 @@ func placeName(a *glx.GLXFile, id string) string {
 	return p.Name + ", " + placeName(a, p.ParentID)
 }
 
+func mediaTitle(a *glx.GLXFile, id string) string {
+	if id == "" {
+		return unspecifiedValue
+	}
+
+	m, ok := a.Media[id]
+	if !ok {
+		return unknown(id, "media")
+	}
+
+	if m.Title == "" {
+		return unnamed(id, "media")
+	}
+
+	return m.Title
+}
+
 func personName(a *glx.GLXFile, id string) string {
 	p, ok := a.Persons[id]
 	if !ok {
@@ -221,6 +247,23 @@ func personName(a *glx.GLXFile, id string) string {
 	}
 
 	return name
+}
+
+func repositoryName(a *glx.GLXFile, id string) string {
+	if id == "" {
+		return unspecifiedValue
+	}
+
+	p, ok := a.Repositories[id]
+	if !ok {
+		return unknown(id, "repository")
+	}
+
+	if p.Name == "" {
+		return unnamed(id, "repository")
+	}
+
+	return p.Name
 }
 
 func sourceTitle(a *glx.GLXFile, id string) string {
