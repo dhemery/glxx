@@ -35,8 +35,9 @@ func describe(_ *cobra.Command, ids []string) error {
 		describeEvent(archive, id, e)
 		return nil
 	}
-	if _, ok := archive.Media[id]; ok {
-		return fmt.Errorf("Not implemented: describe media")
+	if m, ok := archive.Media[id]; ok {
+		describeMedia(archive, id, m)
+		return nil
 	}
 	if _, ok := archive.Persons[id]; ok {
 		return fmt.Errorf("Not implemented: describe person")
@@ -72,6 +73,19 @@ func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
 	for _, p := range e.Participants {
 		printParticipation(a, p.Person, p.Role)
 	}
+
+	fmt.Println()
+}
+func describeMedia(a *glx.GLXFile, id string, m *glx.Media) {
+	printReportHeader("Media", id)
+
+	printReportItem("Title:", m.Title)
+	printReportItem("URI:", m.URI)
+	printReportItem("Type:", m.Type)
+	printReportItem("MimeType:", m.MimeType)
+	printReportItem("Hash:", m.Hash)
+	printReportItem("Date:", m.Date.String())
+	printSourceReference(a, "Source:", m.Source)
 
 	fmt.Println()
 }
@@ -132,7 +146,7 @@ func printRelationshipEvent(a *glx.GLXFile, label, id string) {
 
 	e, ok := a.Events[id]
 	if !ok { // Probably can't happen. Validation would have failed.
-		printReportItem("Event:", formattedUnknownID(id, "event"))
+		printReportItem("Event:", unknown(id, "event"))
 		return
 	}
 
@@ -142,17 +156,20 @@ func printRelationshipEvent(a *glx.GLXFile, label, id string) {
 	printReportItem("Date:", e.Date.String())
 }
 
-func printRepositoryReference(a *glx.GLXFile, label, id string) {
-	printReportItem(label, repositoryName(a, id))
-	printReportItem("  id:", id)
-}
-
 func printPlaceReference(a *glx.GLXFile, label, id string) {
 	printReportItem(label, placeName(a, id))
 	printReportItem("  id:", id)
 }
 
-const unspecifiedValue = "—"
+func printRepositoryReference(a *glx.GLXFile, label, id string) {
+	printReportItem(label, repositoryName(a, id))
+	printReportItem("  id:", id)
+}
+
+func printSourceReference(a *glx.GLXFile, label, id string) {
+	printReportItem(label, sourceTitle(a, id))
+	printReportItem("  id:", id)
+}
 
 func repositoryName(a *glx.GLXFile, id string) string {
 	if id == "" {
@@ -161,11 +178,11 @@ func repositoryName(a *glx.GLXFile, id string) string {
 
 	p, ok := a.Repositories[id]
 	if !ok {
-		return formattedUnknownID(id, "repository")
+		return unknown(id, "repository")
 	}
 
 	if p.Name == "" {
-		return formattedUnnamedEntity(id, "repository")
+		return unnamed(id, "repository")
 	}
 
 	return p.Name
@@ -178,11 +195,11 @@ func placeName(a *glx.GLXFile, id string) string {
 
 	p, ok := a.Places[id]
 	if !ok {
-		return formattedUnknownID(id, "place")
+		return unknown(id, "place")
 	}
 
 	if p.Name == "" {
-		return formattedUnnamedEntity(id, "place")
+		return unnamed(id, "place")
 	}
 
 	if p.ParentID == "" {
@@ -195,15 +212,32 @@ func placeName(a *glx.GLXFile, id string) string {
 func personName(a *glx.GLXFile, id string) string {
 	p, ok := a.Persons[id]
 	if !ok {
-		return formattedUnknownID(id, "person")
+		return unknown(id, "person")
 	}
 
 	name := glx.PersonDisplayName(p)
 	if name == "" {
-		return formattedUnnamedEntity(id, "person")
+		return unnamed(id, "person")
 	}
 
 	return name
+}
+
+func sourceTitle(a *glx.GLXFile, id string) string {
+	if id == "" {
+		return unspecifiedValue
+	}
+
+	p, ok := a.Sources[id]
+	if !ok {
+		return unknown(id, "source")
+	}
+
+	if p.Title == "" {
+		return unnamed(id, "source")
+	}
+
+	return p.Title
 }
 
 func printParticipation(a *glx.GLXFile, personID string, role string) {
@@ -236,10 +270,16 @@ func printSectionHeader(title string) {
 	fmt.Println(prefix + strings.Repeat("─", remaining))
 }
 
-func formattedUnknownID(id, typ string) string {
-	return fmt.Sprintf("unknown %s id %s", typ, id)
+const unspecifiedValue = "—"
+
+func unknown(id, typ string) string {
+	return formattedLabeledID("unknown", id, typ)
 }
 
-func formattedUnnamedEntity(id, typ string) string {
-	return fmt.Sprintf("unnamed %s id %s", typ, id)
+func unnamed(id, typ string) string {
+	return formattedLabeledID("unnamed", id, typ)
+}
+
+func formattedLabeledID(label, id, typ string) string {
+	return fmt.Sprintf("%s %s id %s", label, typ, id)
 }
