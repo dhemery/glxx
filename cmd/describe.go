@@ -48,8 +48,9 @@ func describe(_ *cobra.Command, ids []string) error {
 		describeRelationship(archive, id, r)
 		return nil
 	}
-	if _, ok := archive.Repositories[id]; ok {
-		return fmt.Errorf("Not implemented: describe repository")
+	if r, ok := archive.Repositories[id]; ok {
+		describeRepository(archive, id, r)
+		return nil
 	}
 	if _, ok := archive.Sources[id]; ok {
 		return fmt.Errorf("Not implemented: describe source")
@@ -85,6 +86,21 @@ func describeRelationship(a *glx.GLXFile, id string, r *glx.Relationship) {
 
 	printRelationshipEvent(a, "Start", r.StartEvent)
 	printRelationshipEvent(a, "End", r.EndEvent)
+
+	fmt.Println()
+}
+
+func describeRepository(a *glx.GLXFile, id string, r *glx.Repository) {
+	printReportHeader("Repository", id)
+
+	printReportItem("Name:", r.Name)
+	printReportItem("Type:", r.Type)
+	printReportItem("Address:", r.Address)
+	printReportItem("City:", r.City)
+	printReportItem("State:", r.State)
+	printReportItem("Postal Code:", r.PostalCode)
+	printReportItem("Country:", r.Country)
+	printReportItem("Website:", r.Website)
 
 	fmt.Println()
 }
@@ -166,6 +182,9 @@ func printReportHeader(typ, title string) {
 }
 
 func printReportItem(label string, value any) {
+	if value == "" {
+		value = unspecifiedValue
+	}
 	fmt.Printf("  %-18s%s\n", label, value)
 }
 
