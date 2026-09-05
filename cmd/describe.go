@@ -44,8 +44,9 @@ func describe(_ *cobra.Command, ids []string) error {
 	if _, ok := archive.Places[id]; ok {
 		return fmt.Errorf("Not implemented: describe place")
 	}
-	if _, ok := archive.Relationships[id]; ok {
-		return fmt.Errorf("Not implemented: describe relationship")
+	if r, ok := archive.Relationships[id]; ok {
+		describeRelationship(archive, id, r)
+		return nil
 	}
 	if _, ok := archive.Repositories[id]; ok {
 		return fmt.Errorf("Not implemented: describe repository")
@@ -58,7 +59,7 @@ func describe(_ *cobra.Command, ids []string) error {
 }
 
 func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
-	printReportHeader(id)
+	printReportHeader("Event", id)
 
 	printReportItem("Title:", e.Title)
 	printReportItem("Type:", e.Type)
@@ -69,7 +70,42 @@ func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
 	for _, p := range e.Participants {
 		printParticipation(a, p.Person, p.Role)
 	}
+
 	fmt.Println()
+}
+
+func describeRelationship(a *glx.GLXFile, id string, r *glx.Relationship) {
+	printReportHeader("Relationship", id)
+
+	printReportItem("Type:", r.Type)
+
+	for _, p := range r.Participants {
+		printParticipation(a, p.Person, p.Role)
+	}
+
+	printRelationshipEvent(a, "Start", r.StartEvent)
+	printRelationshipEvent(a, "End", r.EndEvent)
+
+	fmt.Println()
+}
+
+func printRelationshipEvent(a *glx.GLXFile, label, id string) {
+	if id == "" {
+		return
+	}
+
+	printSectionHeader(label + " Event: " + id)
+
+	e, ok := a.Events[id]
+	if !ok { // Probably can't happen. Validation would have failed.
+		printReportItem("Event:", formattedUnknownID(id, "event"))
+		return
+	}
+
+	printReportItem("Title:", e.Title)
+	printReportItem("Type:", e.Type)
+	printReportItem("Place:", placeName(a, e.PlaceID))
+	printReportItem("Date:", e.Date)
 }
 
 const unspecifiedValue = "—"
@@ -115,8 +151,8 @@ func printParticipation(a *glx.GLXFile, personID string, role string) {
 	printReportItem(label, name)
 }
 
-func printReportHeader(title string) {
-	fmt.Printf("=== %s ===\n\n", title)
+func printReportHeader(typ, title string) {
+	fmt.Printf("=== %s: %s ===\n\n", typ, title)
 }
 
 func printReportItem(label string, value any) {
