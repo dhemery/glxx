@@ -25,8 +25,9 @@ func describe(_ *cobra.Command, ids []string) error {
 	}
 
 	id := ids[0]
-	if _, ok := archive.Assertions[id]; ok {
-		return fmt.Errorf("Not implemented: describe assertions")
+	if a, ok := archive.Assertions[id]; ok {
+		describeAssertion(archive, id, a)
+		return nil
 	}
 	if c, ok := archive.Citations[id]; ok {
 		describeCitation(archive, id, c)
@@ -62,8 +63,38 @@ func describe(_ *cobra.Command, ids []string) error {
 	return fmt.Errorf("Unknown ID: %s", id)
 }
 
+func describeAssertion(a *glx.GLXFile, id string, e *glx.Assertion) {
+	printReportHeader("Assertion", id)
+
+	fmt.Println()
+	printSectionHeader("Conclusion")
+
+	// Subject
+	printReportItem("Property:", e.Property)
+	printReportItem("Value:", e.Value)
+	printReportItem("Date:", e.Date.String())
+	// Participant
+	printReportItem("Confidence:", e.Confidence)
+	printReportItem("Status:", e.Status)
+
+	fmt.Println()
+	printSectionHeader("Evidence")
+	for _, id := range e.Citations {
+		printCitationReference(a, "Citation:", id)
+	}
+	for _, id := range e.Sources {
+		printSourceReference(a, "Source:", id)
+	}
+	for _, id := range e.Media {
+		printSourceReference(a, "Media:", id)
+	}
+
+	fmt.Println()
+}
+
 func describeCitation(a *glx.GLXFile, id string, c *glx.Citation) {
 	printReportHeader("Citation", id)
+	fmt.Println()
 
 	printSourceReference(a, "Source:", c.SourceID)
 	printRepositoryReference(a, "Repository:", c.RepositoryID)
@@ -76,12 +107,14 @@ func describeCitation(a *glx.GLXFile, id string, c *glx.Citation) {
 
 func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
 	printReportHeader("Event", id)
+	fmt.Println()
 
 	printReportItem("Title:", e.Title)
 	printReportItem("Type:", e.Type)
 	printPlaceReference(a, "Place:", e.PlaceID)
 	printReportItem("Date:", e.Date.String())
 
+	fmt.Println()
 	printSectionHeader("Participants")
 	for _, p := range e.Participants {
 		printParticipation(a, p.Person, p.Role)
@@ -91,6 +124,7 @@ func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
 }
 func describeMedia(a *glx.GLXFile, id string, m *glx.Media) {
 	printReportHeader("Media", id)
+	fmt.Println()
 
 	printReportItem("Title:", m.Title)
 	printReportItem("URI:", m.URI)
@@ -105,6 +139,7 @@ func describeMedia(a *glx.GLXFile, id string, m *glx.Media) {
 
 func describeRelationship(a *glx.GLXFile, id string, r *glx.Relationship) {
 	printReportHeader("Relationship", id)
+	fmt.Println()
 
 	printReportItem("Type:", r.Type)
 
@@ -120,6 +155,7 @@ func describeRelationship(a *glx.GLXFile, id string, r *glx.Relationship) {
 
 func describeRepository(id string, r *glx.Repository) {
 	printReportHeader("Repository", id)
+	fmt.Println()
 
 	printReportItem("Name:", r.Name)
 	printReportItem("Type:", r.Type)
@@ -135,6 +171,7 @@ func describeRepository(id string, r *glx.Repository) {
 
 func describeSource(a *glx.GLXFile, id string, s *glx.Source) {
 	printReportHeader("Source", id)
+	fmt.Println()
 
 	printReportItem("Title:", s.Title)
 	for _, author := range s.Authors {
@@ -157,6 +194,7 @@ func printRelationshipEvent(a *glx.GLXFile, label, id string) {
 		return
 	}
 
+	fmt.Println()
 	printSectionHeader(label + " Event: " + id)
 
 	e, ok := a.Events[id]
@@ -169,6 +207,33 @@ func printRelationshipEvent(a *glx.GLXFile, label, id string) {
 	printReportItem("Type:", e.Type)
 	printPlaceReference(a, "Place:", e.PlaceID)
 	printReportItem("Date:", e.Date.String())
+}
+
+func printCitationReference(a *glx.GLXFile, label, id string) {
+	if id == "" {
+		printReportItem(label, unspecifiedValue)
+		return
+	}
+
+	c, ok := a.Citations[id]
+	if !ok {
+		printReportItem(label, unknown(id, "citation"))
+		return
+	}
+
+	printReportItem(label, "")
+	printReportItem("  Source:", sourceTitle(a, c.SourceID))
+	if c.SourceID != "" {
+		printReportItem("    id:", c.SourceID)
+	}
+	printReportItem("  Repository:", repositoryName(a, c.RepositoryID))
+	if c.RepositoryID != "" {
+		printReportItem("    id:", c.RepositoryID)
+	}
+	for _, m := range c.Media {
+		printReportItem("  Media:", mediaTitle(a, m))
+		printReportItem("    id:", m)
+	}
 }
 
 func printMediaReference(a *glx.GLXFile, label, id string) {
@@ -295,7 +360,7 @@ func printPersonReference(a *glx.GLXFile, label, personID string) {
 }
 
 func printReportHeader(typ, title string) {
-	fmt.Printf("=== %s: %s ===\n\n", typ, title)
+	fmt.Printf("=== %s: %s ===\n", typ, title)
 }
 
 func printReportItem(label string, value string) {
@@ -307,7 +372,7 @@ func printReportItem(label string, value string) {
 
 func printSectionHeader(title string) {
 	const width = 50
-	prefix := "\n── " + title + " "
+	prefix := "── " + title + " "
 	remaining := max(width-utf8.RuneCountInString(prefix), 2)
 
 	fmt.Println(prefix + strings.Repeat("─", remaining))
