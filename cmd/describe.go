@@ -72,7 +72,7 @@ func describeAssertion(a *glx.GLXFile, id string, e *glx.Assertion) {
 	fmt.Println()
 	printSectionHeader("Conclusion")
 
-	// Subject
+	printSubjectReference(a, "Subject:", e.Subject)
 	printReportItem("Property:", e.Property)
 	printReportItem("Value:", e.Value)
 	printReportItem("Date:", e.Date.String())
@@ -205,7 +205,7 @@ func printCitationReference(a *glx.GLXFile, label, id string) {
 		return
 	}
 
-	printReportItem(label, "")
+	printReportLine(label, "")
 	printReportItem("  Source:", sourceTitle(a, c.SourceID))
 	if c.SourceID != "" {
 		printReportItem("    id:", c.SourceID)
@@ -261,9 +261,19 @@ func printSourceReference(a *glx.GLXFile, label, id string) {
 	printReference(label, id, sourceTitle(a, id))
 }
 
-func printReference(label, id, value string) {
-	printReportItem(label, value)
-	printReportItem("  id:", id)
+func printSubjectReference(a *glx.GLXFile, label string, e glx.EntityRef) {
+	printReportLine("Subject:", "")
+
+	switch {
+	case e.Person != "":
+		printReportItem("  Person:", personName(a, e.Person))
+		printReportItem("    id:", e.Person)
+	case e.Place != "":
+		printReportItem("  Place:", placeName(a, e.Place))
+		printReportItem("    id:", e.Place)
+	default:
+		printReportItem("FOO:", "relationship or event")
+	}
 }
 
 func placeName(a *glx.GLXFile, id string) string {
@@ -363,6 +373,11 @@ func printPersonReference(a *glx.GLXFile, label, personID string) {
 	printReportItem("  id:", personID)
 }
 
+func printReference(label, id, value string) {
+	printReportItem(label, value)
+	printReportItem("  id:", id)
+}
+
 func printReportHeader(typ, title string) {
 	fmt.Printf("=== %s: %s ===\n", typ, title)
 }
@@ -371,6 +386,10 @@ func printReportItem(label string, value string) {
 	if value == "" {
 		value = unspecifiedValue
 	}
+	printReportLine(label, value)
+}
+
+func printReportLine(label, value string) {
 	fmt.Printf("  %-18s%s\n", label, value)
 }
 
