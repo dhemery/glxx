@@ -67,15 +67,19 @@ func describeAssertion(a *glx.GLXFile, id string, e *glx.Assertion) {
 	printReportHeader("Assertion", id)
 
 	fmt.Println()
+	printReportItem("Status:", e.Status)
+
+	fmt.Println()
 	printSectionHeader("Conclusion")
 
 	// Subject
 	printReportItem("Property:", e.Property)
 	printReportItem("Value:", e.Value)
 	printReportItem("Date:", e.Date.String())
-	// Participant
+	if p := e.Participant; p != nil {
+		printParticipation(a, p.Person, p.Role)
+	}
 	printReportItem("Confidence:", e.Confidence)
-	printReportItem("Status:", e.Status)
 
 	fmt.Println()
 	printSectionHeader("Evidence")
@@ -189,26 +193,6 @@ func describeSource(a *glx.GLXFile, id string, s *glx.Source) {
 	fmt.Println()
 }
 
-func printRelationshipEvent(a *glx.GLXFile, label, id string) {
-	if id == "" {
-		return
-	}
-
-	fmt.Println()
-	printSectionHeader(label + " Event: " + id)
-
-	e, ok := a.Events[id]
-	if !ok { // Probably can't happen. Validation would have failed.
-		printReportItem("Event:", unknown(id, "event"))
-		return
-	}
-
-	printReportItem("Title:", e.Title)
-	printReportItem("Type:", e.Type)
-	printPlaceReference(a, "Place:", e.PlaceID)
-	printReportItem("Date:", e.Date.String())
-}
-
 func printCitationReference(a *glx.GLXFile, label, id string) {
 	if id == "" {
 		printReportItem(label, unspecifiedValue)
@@ -242,6 +226,26 @@ func printMediaReference(a *glx.GLXFile, label, id string) {
 
 func printPlaceReference(a *glx.GLXFile, label, id string) {
 	printReference(label, id, placeName(a, id))
+}
+
+func printRelationshipEvent(a *glx.GLXFile, label, id string) {
+	if id == "" {
+		return
+	}
+
+	fmt.Println()
+	printSectionHeader(label + " Event: " + id)
+
+	e, ok := a.Events[id]
+	if !ok { // Probably can't happen. Validation would have failed.
+		printReportItem("Event:", unknown(id, "event"))
+		return
+	}
+
+	printReportItem("Title:", e.Title)
+	printReportItem("Type:", e.Type)
+	printPlaceReference(a, "Place:", e.PlaceID)
+	printReportItem("Date:", e.Date.String())
 }
 
 func printRepositoryReference(a *glx.GLXFile, label, id string) {
