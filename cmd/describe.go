@@ -18,49 +18,75 @@ var describeCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 }
 
-func describe(_ *cobra.Command, ids []string) error {
+func describe(c *cobra.Command, ids []string) error {
+	archivePath, err := c.Flags().GetString("archive")
+	if err != nil {
+		return err
+	}
+
 	archive, err := load.Load(archivePath)
 	if err != nil {
 		return err
 	}
 
 	id := ids[0]
-	if a, ok := archive.Assertions[id]; ok {
-		describeAssertion(archive, id, a)
-		return nil
-	}
-	if c, ok := archive.Citations[id]; ok {
-		describeCitation(archive, id, c)
-		return nil
-	}
-	if e, ok := archive.Events[id]; ok {
+	entity := findEntityByID(archive, id)
+
+	switch e := entity.(type) {
+	case *glx.Assertion:
+		describeAssertion(archive, id, e)
+	case *glx.Citation:
+		describeCitation(archive, id, e)
+	case *glx.Event:
 		describeEvent(archive, id, e)
-		return nil
-	}
-	if m, ok := archive.Media[id]; ok {
-		describeMedia(archive, id, m)
-		return nil
-	}
-	if _, ok := archive.Persons[id]; ok {
-		return fmt.Errorf("Not implemented: describe person")
-	}
-	if _, ok := archive.Places[id]; ok {
-		return fmt.Errorf("Not implemented: describe place")
-	}
-	if r, ok := archive.Relationships[id]; ok {
-		describeRelationship(archive, id, r)
-		return nil
-	}
-	if r, ok := archive.Repositories[id]; ok {
-		describeRepository(id, r)
-		return nil
-	}
-	if s, ok := archive.Sources[id]; ok {
-		describeSource(archive, id, s)
-		return nil
+	case *glx.Media:
+		describeMedia(archive, id, e)
+	case *glx.Person:
+		describePerson(archive, id, e)
+	case *glx.Place:
+		describePlace(archive, id, e)
+	case *glx.Relationship:
+		describeRelationship(archive, id, e)
+	case *glx.Repository:
+		describeRepository(id, e)
+	case *glx.Source:
+		describeSource(archive, id, e)
+	default:
+		return fmt.Errorf("Unknown ID: %s", id)
 	}
 
-	return fmt.Errorf("Unknown ID: %s", id)
+	return nil
+}
+
+func findEntityByID(a *glx.GLXFile, id string) any {
+	if e, ok := a.Assertions[id]; ok {
+		return e
+	}
+	if e := a.Citations[id]; e != nil {
+		return e
+	}
+	if e := a.Events[id]; e != nil {
+		return e
+	}
+	if e := a.Media[id]; e != nil {
+		return e
+	}
+	if e := a.Persons[id]; e != nil {
+		return e
+	}
+	if e := a.Places[id]; e != nil {
+		return e
+	}
+	if e := a.Relationships[id]; e != nil {
+		return e
+	}
+	if e := a.Repositories[id]; e != nil {
+		return e
+	}
+	if e := a.Sources[id]; e != nil {
+		return e
+	}
+	return nil
 }
 
 func describeAssertion(a *glx.GLXFile, id string, e *glx.Assertion) {
@@ -138,6 +164,24 @@ func describeMedia(a *glx.GLXFile, id string, m *glx.Media) {
 	printReportItem("Hash:", m.Hash)
 	printReportItem("Date:", m.Date.String())
 	printSourceReference(a, "Source:", m.Source)
+
+	fmt.Println()
+}
+
+func describePerson(a *glx.GLXFile, id string, p *glx.Person) {
+	printReportHeader("Person", id)
+	fmt.Println()
+
+	printReportItem("Name:", personName(a, id))
+
+	fmt.Println()
+}
+
+func describePlace(a *glx.GLXFile, id string, p *glx.Place) {
+	printReportHeader("Place", id)
+	fmt.Println()
+
+	printReportItem("Name:", placeName(a, id))
 
 	fmt.Println()
 }
