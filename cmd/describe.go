@@ -70,27 +70,28 @@ func describeAssertion(a *glx.GLXFile, id string, e *glx.Assertion) {
 	printReportItem("Status:", e.Status)
 
 	fmt.Println()
-	printSectionHeader("Conclusion")
-
-	printSubjectReference(a, "Subject:", e.Subject)
-	printReportItem("Property:", e.Property)
-	printReportItem("Value:", e.Value)
-	printReportItem("Date:", e.Date.String())
-	if p := e.Participant; p != nil {
-		printParticipation(a, p.Person, p.Role)
-	}
-	printReportItem("Confidence:", e.Confidence)
+	printSubjectSection(a, e.Subject)
 
 	fmt.Println()
-	printSectionHeader("Evidence")
-	for _, id := range e.Citations {
-		printCitationReference(a, "Citation:", id)
+	printSectionHeader("Conclusion")
+	printReportItem("Property:", e.Property)
+	if p := e.Participant; p == nil {
+		printReportItem("Value:", e.Value)
+	} else {
+		printParticipation(a, p.Person, p.Role)
 	}
-	for _, id := range e.Sources {
-		printSourceReference(a, "Source:", id)
+	printReportItem("Date:", e.Date.String())
+	printReportItem("Confidence:", e.Confidence)
+
+	for _, id := range e.Citations {
+		fmt.Println()
+		printCitationSection(a, id)
 	}
 	for _, id := range e.Media {
-		printSourceReference(a, "Media:", id)
+		printMediaReference(a, "Media:", id)
+	}
+	for _, id := range e.Sources {
+		printSourceSection(a, id)
 	}
 
 	fmt.Println()
@@ -193,30 +194,24 @@ func describeSource(a *glx.GLXFile, id string, s *glx.Source) {
 	fmt.Println()
 }
 
-func printCitationReference(a *glx.GLXFile, label, id string) {
+func printCitationSection(a *glx.GLXFile, id string) {
+	const header = "Citation: %s %s"
 	if id == "" {
-		printReportItem(label, unspecifiedValue)
+		printSectionHeader(fmt.Sprintf(header, "(unspecified)", ""))
 		return
 	}
 
 	c, ok := a.Citations[id]
 	if !ok {
-		printReportItem(label, unknown(id, "citation"))
+		printSectionHeader(fmt.Sprintf(header, id, "(unknown)"))
 		return
 	}
 
-	printReportLine(label, "")
-	printReportItem("  Source:", sourceTitle(a, c.SourceID))
-	if c.SourceID != "" {
-		printReportItem("    id:", c.SourceID)
-	}
-	printReportItem("  Repository:", repositoryName(a, c.RepositoryID))
-	if c.RepositoryID != "" {
-		printReportItem("    id:", c.RepositoryID)
-	}
+	printSectionHeader(fmt.Sprintf(header, id, ""))
+	printReportItem("Source:", sourceTitle(a, c.SourceID))
+	printRepositoryReference(a, "Repository:", c.RepositoryID)
 	for _, m := range c.Media {
-		printReportItem("  Media:", mediaTitle(a, m))
-		printReportItem("    id:", m)
+		printMediaReference(a, "Media", m)
 	}
 }
 
@@ -261,18 +256,79 @@ func printSourceReference(a *glx.GLXFile, label, id string) {
 	printReference(label, id, sourceTitle(a, id))
 }
 
-func printSubjectReference(a *glx.GLXFile, label string, e glx.EntityRef) {
-	printReportLine("Subject:", "")
+func printSourceSection(a *glx.GLXFile, id string) {
+	const header = "Source: %s %s"
+	if id == "" {
+		printSectionHeader(fmt.Sprintf(header, "(unspecified)", ""))
+		return
+	}
 
+	_, ok := a.Sources[id]
+	if !ok {
+		printSectionHeader(fmt.Sprintf(header, id, "(unknown)"))
+		return
+	}
+	printSectionHeader(fmt.Sprintf(header, id, ""))
+	printReportItem("Source:", sourceTitle(a, id))
+}
+
+func printSubjectSection(a *glx.GLXFile, e glx.EntityRef) {
 	switch {
+	case e.Event != "":
+		printEventSubjectSection(a, e.Event)
 	case e.Person != "":
-		printReportItem("  Person:", personName(a, e.Person))
-		printReportItem("    id:", e.Person)
+		printPersonSubjectSection(a, e.Person)
 	case e.Place != "":
-		printReportItem("  Place:", placeName(a, e.Place))
-		printReportItem("    id:", e.Place)
+		printPlaceSubjectSection(a, e.Place)
+	case e.Relationship != "":
+		printRelationshipSubjectSection(a, e.Relationship)
 	default:
-		printReportItem("FOO:", "relationship or event")
+		return
+	}
+}
+
+func printRelationshipSubjectSection(a *glx.GLXFile, id string) {
+	printSectionHeader("Subject Relationship: " + id)
+	r, ok := a.Relationships[id]
+	if !ok {
+		fmt.Println("UNKNOWN RELATIONSHIP")
+	}
+
+	printReportItem("Type:", r.Type)
+
+	for _, p := range r.Participants {
+		printParticipation(a, p.Person, p.Role)
+	}
+
+	printRelationshipEvent(a, "Start", r.StartEvent)
+	printRelationshipEvent(a, "End", r.EndEvent)
+}
+
+func printPersonSubjectSection(a *glx.GLXFile, id string) {
+	printSectionHeader("Subject Person: " + id)
+	printReportItem("Name:", personName(a, id))
+}
+
+func printPlaceSubjectSection(a *glx.GLXFile, id string) {
+	printSectionHeader("Subject Place: " + id)
+	printReportItem("Name:", placeName(a, id))
+}
+
+func printEventSubjectSection(a *glx.GLXFile, id string) {
+	printSectionHeader("Subject Event: " + id)
+
+	e, ok := a.Events[id]
+	if !ok {
+		fmt.Println("UNKNOWN EVENT")
+	}
+
+	printReportItem("Title:", e.Title)
+	printReportItem("Type:", e.Type)
+	printPlaceReference(a, "Place:", e.PlaceID)
+	printReportItem("Date:", e.Date.String())
+
+	for _, p := range e.Participants {
+		printParticipation(a, p.Person, p.Role)
 	}
 }
 
@@ -375,6 +431,9 @@ func printPersonReference(a *glx.GLXFile, label, personID string) {
 
 func printReference(label, id, value string) {
 	printReportItem(label, value)
+	if id == "" {
+		return
+	}
 	printReportItem("  id:", id)
 }
 
