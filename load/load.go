@@ -8,10 +8,13 @@ import (
 	"path/filepath"
 
 	glx "github.com/genealogix/glx/go-glx"
+	"github.com/spf13/cobra"
 )
 
-func Load(archivePath string) (*glx.GLXFile, error) {
-	if archivePath == "" {
+func Load(c *cobra.Command) (*glx.GLXFile, error) {
+	archivePath, err := c.Flags().GetString("archive")
+	if err != nil {
+
 		return nil, fmt.Errorf("empty archive option")
 	}
 

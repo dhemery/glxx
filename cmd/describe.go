@@ -5,6 +5,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"github.com/dhemery/glxx/load"
 	"github.com/genealogix/glx/go-glx"
 	"github.com/spf13/cobra"
 )
@@ -18,6 +19,11 @@ var describeCmd = &cobra.Command{
 }
 
 func describe(c *cobra.Command, ids []string) error {
+	archive, err := load.Load(c)
+	if err != nil {
+		return err
+	}
+
 	id := ids[0]
 	entity := findEntityByID(archive, id)
 

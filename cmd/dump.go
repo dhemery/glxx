@@ -43,8 +43,8 @@ func init() {
 	dumpCmd.Flags().BoolVar(&dumpSources, "sources", dumpSources, "Dump sources")
 }
 
-func dump(_ *cobra.Command, entityIDs []string) error {
-	archiveIn, err := load.Load(archivePath)
+func dump(c *cobra.Command, entityIDs []string) error {
+	archiveIn, err := load.Load(c)
 	if err != nil {
 		return err
 	}
