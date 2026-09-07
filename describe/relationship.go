@@ -2,19 +2,20 @@ package describe
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Relationship Entity[glx.Relationship]
 
-func (relationship *Relationship) Describe() {
+func (relationship *Relationship) Describe(w io.Writer) {
 	id := relationship.id
 	r := relationship.entity
 	a := relationship.archive.file
 
 	printReportHeader("Relationship", id)
-	fmt.Println()
+	fmt.Fprintln(w)
 
 	printReportItem("Type:", r.Type)
 
@@ -23,18 +24,18 @@ func (relationship *Relationship) Describe() {
 		printParticipation(person, p.Role)
 	}
 
-	printRelationshipEvent(a, "Start", r.StartEvent)
-	printRelationshipEvent(a, "End", r.EndEvent)
+	printRelationshipEvent(w, a, "Start", r.StartEvent)
+	printRelationshipEvent(w, a, "End", r.EndEvent)
 
-	fmt.Println()
+	fmt.Fprintln(w)
 }
 
-func printRelationshipEvent(a *glx.GLXFile, label, id string) {
+func printRelationshipEvent(w io.Writer, a *glx.GLXFile, label, id string) {
 	if id == "" {
 		return
 	}
 
-	fmt.Println()
+	fmt.Fprintln(w)
 	printSectionHeader(label + " Event: " + id)
 
 	e, ok := a.Events[id]

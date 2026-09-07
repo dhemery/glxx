@@ -3,6 +3,8 @@ package describe
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"strings"
 	"unicode/utf8"
 
@@ -25,7 +27,7 @@ type Entity[T any] struct {
 }
 
 type Describer interface {
-	Describe()
+	Describe(io.Writer)
 }
 
 func describe(c *cobra.Command, ids []string) error {
@@ -47,7 +49,7 @@ func describe(c *cobra.Command, ids []string) error {
 		return fmt.Errorf("Unknown ID: %s", id)
 	}
 
-	entity.Describe()
+	entity.Describe(os.Stdout)
 	return nil
 }
 

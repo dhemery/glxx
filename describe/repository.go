@@ -2,18 +2,19 @@ package describe
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Repository Entity[glx.Repository]
 
-func (repository *Repository) Describe() {
+func (repository *Repository) Describe(w io.Writer) {
 	id := repository.id
 	r := repository.entity
 
 	printReportHeader("Repository", id)
-	fmt.Println()
+	fmt.Fprintln(w)
 
 	printReportItem("Name:", r.Name)
 	printReportItem("Type:", r.Type)
@@ -24,7 +25,7 @@ func (repository *Repository) Describe() {
 	printReportItem("Country:", r.Country)
 	printReportItem("Website:", r.Website)
 
-	fmt.Println()
+	fmt.Fprintln(w)
 }
 
 func (r *Repository) Name() string {

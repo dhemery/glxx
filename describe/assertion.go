@@ -2,18 +2,19 @@ package describe
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Assertion Entity[glx.Assertion]
 
-func (a *Assertion) Describe() {
+func (a *Assertion) Describe(w io.Writer) {
 	id := a.id
 	glxfile := a.archive.file
 	e := a.entity
 	if e == nil {
-		fmt.Println("NO ASSERTION", id)
+		fmt.Fprintln(w, "NO ASSERTION", id)
 		return
 	}
 
@@ -23,7 +24,7 @@ func (a *Assertion) Describe() {
 	printReportItem("Status:", e.Status)
 
 	fmt.Println()
-	printSubjectSection(glxfile, e.Subject)
+	printSubjectSection(w, glxfile, e.Subject)
 
 	fmt.Println()
 	printSectionHeader("Conclusion")
@@ -51,7 +52,7 @@ func (a *Assertion) Describe() {
 	fmt.Println()
 }
 
-func printSubjectSection(a *glx.GLXFile, e glx.EntityRef) {
+func printSubjectSection(w io.Writer, a *glx.GLXFile, e glx.EntityRef) {
 	switch {
 	case e.Event != "":
 		printEventSubjectSection(a, e.Event)
@@ -61,13 +62,13 @@ func printSubjectSection(a *glx.GLXFile, e glx.EntityRef) {
 	case e.Place != "":
 		printPlaceSubjectSection(a, e.Place)
 	case e.Relationship != "":
-		printRelationshipSubjectSection(a, e.Relationship)
+		printRelationshipSubjectSection(w, a, e.Relationship)
 	default:
 		return
 	}
 }
 
-func printRelationshipSubjectSection(a *glx.GLXFile, id string) {
+func printRelationshipSubjectSection(w io.Writer, a *glx.GLXFile, id string) {
 	printSectionHeader("Subject Relationship: " + id)
 	r, ok := a.Relationships[id]
 	if !ok {
@@ -81,8 +82,8 @@ func printRelationshipSubjectSection(a *glx.GLXFile, id string) {
 		printParticipation(person, p.Role)
 	}
 
-	printRelationshipEvent(a, "Start", r.StartEvent)
-	printRelationshipEvent(a, "End", r.EndEvent)
+	printRelationshipEvent(w, a, "Start", r.StartEvent)
+	printRelationshipEvent(w, a, "End", r.EndEvent)
 }
 
 func printPersonSubjectSection(p *Person) {

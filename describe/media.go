@@ -2,19 +2,20 @@ package describe
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Media Entity[glx.Media]
 
-func (media *Media) Describe() {
+func (media *Media) Describe(w io.Writer) {
 	m := media.entity
 	id := media.id
 	a := media.archive.file
 
 	printReportHeader("Media", id)
-	fmt.Println()
+	fmt.Fprintln(w)
 
 	printReportItem("Title:", m.Title)
 	printReportItem("URI:", m.URI)
@@ -24,7 +25,7 @@ func (media *Media) Describe() {
 	printReportItem("Date:", m.Date.String())
 	printSourceReference(a, "Source:", m.Source)
 
-	fmt.Println()
+	fmt.Fprintln(w)
 }
 
 func (m *Media) PrintReference() {

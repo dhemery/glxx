@@ -2,15 +2,16 @@ package describe
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Citation Entity[glx.Citation]
 
-func (c *Citation) Describe() {
+func (c *Citation) Describe(w io.Writer) {
 	printReportHeader("Citation", c.id)
-	fmt.Println()
+	fmt.Fprintln(w)
 
 	c.Source().PrintReference()
 	c.Repository().PrintReference()
@@ -19,7 +20,7 @@ func (c *Citation) Describe() {
 		m.PrintReference()
 	}
 
-	fmt.Println()
+	fmt.Fprintln(w)
 }
 
 func (c *Citation) Media() []*Media {

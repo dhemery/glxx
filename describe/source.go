@@ -2,17 +2,18 @@ package describe
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Source Entity[glx.Source]
 
-func (s *Source) Describe() {
+func (s *Source) Describe(w io.Writer) {
 	entity := s.entity
 
 	printReportHeader("Source", s.id)
-	fmt.Println()
+	fmt.Fprintln(w)
 
 	printReportItem("Title:", s.Title())
 	for _, author := range entity.Authors {
@@ -27,7 +28,7 @@ func (s *Source) Describe() {
 		m.PrintReference()
 	}
 
-	fmt.Println()
+	fmt.Fprintln(w)
 }
 
 func (s *Source) Media() []*Media {

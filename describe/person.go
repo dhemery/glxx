@@ -2,6 +2,7 @@ package describe
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/genealogix/glx/go-glx"
 )
@@ -13,13 +14,13 @@ func printPersonReference(label string, p *Person) {
 
 type Person Entity[glx.Person]
 
-func (p *Person) Describe() {
+func (p *Person) Describe(w io.Writer) {
 	printReportHeader("Person", p.id)
-	fmt.Println()
+	fmt.Fprintln(w)
 
 	printReportItem("Name:", p.Name())
 
-	fmt.Println()
+	fmt.Fprintln(w)
 }
 
 func (p *Person) Name() string {
