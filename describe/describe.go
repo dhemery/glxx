@@ -193,20 +193,65 @@ func (a *Assertion) Describe() {
 
 type Citation Entity[glx.Citation]
 
-func (citation *Citation) Describe() {
-	id := citation.id
-	a := citation.archive.file
-	c := citation.entity
-	printReportHeader("Citation", id)
+func (c *Citation) Describe() {
+	printReportHeader("Citation", c.id)
 	fmt.Println()
 
-	printSourceReference(a, "Source:", c.SourceID)
-	printRepositoryReference(a, "Repository:", c.RepositoryID)
-	for _, m := range c.Media {
-		printMediaReference(a, "Media:", m)
+	c.Source().PrintReference()
+	c.Repository().PrintReference()
+
+	for _, m := range c.Media() {
+		m.PrintReference()
 	}
 
 	fmt.Println()
+}
+
+func (c *Citation) Media() []*Media {
+	var out []*Media
+	for _, m:=range c.entity.Media  {
+		out = append(out, c.archive.Media(m))
+	}
+	return out
+}
+
+func (c *Citation) Source() *Source {
+	return c.archive.Source(c.entity.SourceID)
+}
+
+func (c *Citation) Repository() *Repository {
+	return c.archive.Repository(c.entity.RepositoryID)
+}
+
+func (c *Citation) PrintSection() {
+	const header = "Citation: %s %s"
+	printSectionHeader(fmt.Sprintf(header, c.id, ""))
+		c.Source().PrintReference()
+		c.Repository().PrintReference()
+	for _, m := range c.Media() {
+		m.PrintReference()
+	}
+}
+
+func printCitationSection(a *glx.GLXFile, id string) {
+	const header = "Citation: %s %s"
+	if id == "" {
+		printSectionHeader(fmt.Sprintf(header, "(unspecified)", ""))
+		return
+	}
+
+	c, ok := a.Citations[id]
+	if !ok {
+		printSectionHeader(fmt.Sprintf(header, id, "(unknown)"))
+		return
+	}
+
+	printSectionHeader(fmt.Sprintf(header, id, ""))
+	printReportItem("Source:", sourceTitle(a, c.SourceID))
+	printRepositoryReference(a, "Repository:", c.RepositoryID)
+	for _, m := range c.Media {
+		printMediaReference(a, "Media", m)
+	}
 }
 
 type Event Entity[glx.Event]
@@ -255,6 +300,39 @@ func (media *Media) Describe() {
 	fmt.Println()
 }
 
+func (m*Media) PrintReference() {
+	printReference("Media:", m.id, m.Title())
+}
+
+func printMediaReference(a *glx.GLXFile, label, id string) {
+	printReference(label, id, mediaTitle(a, id))
+}
+
+func (m*Media) Title() string {
+	title := m.entity.Title
+	if title == "" {
+		return unnamed(m.id, "media")
+	}
+
+	return title
+}
+
+func mediaTitle(a *glx.GLXFile, id string) string {
+	if id == "" {
+		return unspecifiedValue
+	}
+
+	m, ok := a.Media[id]
+	if !ok {
+		return unknown(id, "media")
+	}
+
+	if m.Title == "" {
+		return unnamed(id, "media")
+	}
+
+	return m.Title
+}
 type Person Entity[glx.Person]
 
 func (p *Person) Describe() {
@@ -353,56 +431,151 @@ func (repository *Repository) Describe() {
 	fmt.Println()
 }
 
+func (r *Repository) Name() string {
+	if r == nil {
+		return unspecifiedValue
+	}
+
+	name := r.entity.Name
+
+	if name == "" {
+		return unnamed(r.id, "repository")
+	}
+
+	return name
+}
+
+func repositoryName(a *glx.GLXFile, id string) string {
+	if id == "" {
+		return unspecifiedValue
+	}
+
+	p, ok := a.Repositories[id]
+	if !ok {
+		return unknown(id, "repository")
+	}
+
+	if p.Name == "" {
+		return unnamed(id, "repository")
+	}
+
+	return p.Name
+}
+func (r *Repository) PrintReference() {
+	if r == nil {
+		return
+	}
+	printReference("Repository:", r.Name(), r.id)
+}
+
+func printRepositoryReference(a *glx.GLXFile, label, id string) {
+	name := repositoryName(a, id)
+	if name == unspecifiedValue {
+		printReportItem(label, name)
+		return
+	}
+	printReference(label, id, name)
+}
+
 type Source Entity[glx.Source]
 
-func (source *Source) Describe() {
-	id := source.id
-	s := source.entity
-	a := source.archive.file
+func (s *Source) Describe() {
+	entity := s.entity
 
-	printReportHeader("Source", id)
+	printReportHeader("Source", s.id)
 	fmt.Println()
 
-	printReportItem("Title:", s.Title)
-	for _, author := range s.Authors {
+	printReportItem("Title:", s.Title())
+	for _, author := range entity.Authors {
 		printReportItem("Author:", author)
 	}
-	printReportItem("Date:", s.Date.String())
-	printReportItem("Language:", s.Language)
+	printReportItem("Date:", entity.Date.String())
+	printReportItem("Language:", entity.Language)
 
-	printRepositoryReference(a, "Repository:", s.RepositoryID)
+	s.Repository().PrintReference()
 
-	for _, m := range s.Media {
-		printMediaReference(a, "Media:", m)
+	for _, m := range s.Media() {
+		m.PrintReference()
 	}
 
 	fmt.Println()
 }
 
-func printCitationSection(a *glx.GLXFile, id string) {
-	const header = "Citation: %s %s"
+func (s*Source) Media() []*Media {
+	var out []*Media
+	for _, m := range s.entity.Media{
+
+		out = append(out, s.archive.Media(m))
+	}
+	return out
+}
+
+func (s *Source) Repository() *Repository {
+	return s.archive.Repository(s.id)
+}
+
+func (s *Source) Title() string {
+	title := s.entity.Title
+	if title == "" {
+		return unnamed(s.id, "source")
+	}
+
+	return title
+}
+
+func sourceTitle(a *glx.GLXFile, id string) string {
+	if id == "" {
+		return unspecifiedValue
+	}
+
+	p, ok := a.Sources[id]
+	if !ok {
+		return unknown(id, "source")
+	}
+
+	if p.Title == "" {
+		return unnamed(id, "source")
+	}
+
+	return p.Title
+}
+
+func (s *Source) PrintReference() {
+	printReference("Source:", s.id, s.Title())
+}
+
+func printSourceReference(a *glx.GLXFile, label, id string) {
+	printReference(label, id, sourceTitle(a, id))
+}
+
+func (s *Source) PrintSection() {
+	const header = "Source: %s %s"
+
+	if s == nil {
+		printSectionHeader(fmt.Sprintf(header, "", "(unknown)"))
+		return
+	}
+	printSectionHeader(fmt.Sprintf(header, s.id, ""))
+	printReportItem("Source:", s.Title())
+}
+
+func printSourceSection(a *glx.GLXFile, id string) {
+	const header = "Source: %s %s"
 	if id == "" {
 		printSectionHeader(fmt.Sprintf(header, "(unspecified)", ""))
 		return
 	}
 
-	c, ok := a.Citations[id]
+	_, ok := a.Sources[id]
 	if !ok {
 		printSectionHeader(fmt.Sprintf(header, id, "(unknown)"))
 		return
 	}
-
 	printSectionHeader(fmt.Sprintf(header, id, ""))
-	printReportItem("Source:", sourceTitle(a, c.SourceID))
-	printRepositoryReference(a, "Repository:", c.RepositoryID)
-	for _, m := range c.Media {
-		printMediaReference(a, "Media", m)
-	}
+	printReportItem("Source:", sourceTitle(a, id))
 }
 
-func printMediaReference(a *glx.GLXFile, label, id string) {
-	printReference(label, id, mediaTitle(a, id))
-}
+
 
 func printPlaceReference(a *glx.GLXFile, label, id string) {
 	p := Archive{a}.Place(id)
@@ -427,35 +600,6 @@ func printRelationshipEvent(a *glx.GLXFile, label, id string) {
 	printReportItem("Type:", e.Type)
 	printPlaceReference(a, "Place:", e.PlaceID)
 	printReportItem("Date:", e.Date.String())
-}
-
-func printRepositoryReference(a *glx.GLXFile, label, id string) {
-	name := repositoryName(a, id)
-	if name == unspecifiedValue {
-		printReportItem(label, name)
-		return
-	}
-	printReference(label, id, name)
-}
-
-func printSourceReference(a *glx.GLXFile, label, id string) {
-	printReference(label, id, sourceTitle(a, id))
-}
-
-func printSourceSection(a *glx.GLXFile, id string) {
-	const header = "Source: %s %s"
-	if id == "" {
-		printSectionHeader(fmt.Sprintf(header, "(unspecified)", ""))
-		return
-	}
-
-	_, ok := a.Sources[id]
-	if !ok {
-		printSectionHeader(fmt.Sprintf(header, id, "(unknown)"))
-		return
-	}
-	printSectionHeader(fmt.Sprintf(header, id, ""))
-	printReportItem("Source:", sourceTitle(a, id))
 }
 
 func printSubjectSection(a *glx.GLXFile, e glx.EntityRef) {
@@ -522,56 +666,7 @@ func printEventSubjectSection(a *glx.GLXFile, id string) {
 	}
 }
 
-func mediaTitle(a *glx.GLXFile, id string) string {
-	if id == "" {
-		return unspecifiedValue
-	}
 
-	m, ok := a.Media[id]
-	if !ok {
-		return unknown(id, "media")
-	}
-
-	if m.Title == "" {
-		return unnamed(id, "media")
-	}
-
-	return m.Title
-}
-
-func repositoryName(a *glx.GLXFile, id string) string {
-	if id == "" {
-		return unspecifiedValue
-	}
-
-	p, ok := a.Repositories[id]
-	if !ok {
-		return unknown(id, "repository")
-	}
-
-	if p.Name == "" {
-		return unnamed(id, "repository")
-	}
-
-	return p.Name
-}
-
-func sourceTitle(a *glx.GLXFile, id string) string {
-	if id == "" {
-		return unspecifiedValue
-	}
-
-	p, ok := a.Sources[id]
-	if !ok {
-		return unknown(id, "source")
-	}
-
-	if p.Title == "" {
-		return unnamed(id, "source")
-	}
-
-	return p.Title
-}
 
 func printParticipation(p *Person, role string) {
 	label := strings.ToUpper(role[:1]) + role[1:] + ":"
