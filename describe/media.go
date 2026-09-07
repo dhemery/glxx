@@ -1,39 +1,35 @@
 package describe
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Media Entity[glx.Media]
 
-func (media *Media) Describe(w io.Writer) {
-	m := media.entity
-	id := media.id
-	a := media.archive.file
+func (m *Media) Describe(r Report) {
+	r.Begin(m)
 
-	printReportHeader("Media", id)
-	fmt.Fprintln(w)
+	r.Item("Title", m.entity.Title)
+	r.Item("URI", m.entity.URI)
+	r.Item("Type", m.entity.Type)
+	r.Item("MimeType", m.entity.MimeType)
+	r.Item("Hash", m.entity.Hash)
+	r.Item("Date", m.entity.Date.String())
+	r.Reference(m.Source())
 
-	printReportItem("Title:", m.Title)
-	printReportItem("URI:", m.URI)
-	printReportItem("Type:", m.Type)
-	printReportItem("MimeType:", m.MimeType)
-	printReportItem("Hash:", m.Hash)
-	printReportItem("Date:", m.Date.String())
-	printSourceReference(a, "Source:", m.Source)
-
-	fmt.Fprintln(w)
+	r.End()
 }
 
-func (m *Media) PrintReference() {
-	printReference("Media:", m.id, m.Title())
+func (m *Media) Label() string {
+	return "Media"
 }
 
-func printMediaReference(a *glx.GLXFile, label, id string) {
-	printReference(label, id, mediaTitle(a, id))
+func (m *Media) ID() string {
+	return m.id
+}
+
+func (m *Media) Name() string {
+	return m.Title()
 }
 
 func (m *Media) Title() string {
@@ -43,6 +39,14 @@ func (m *Media) Title() string {
 	}
 
 	return title
+}
+
+func (m *Media) Source() *Source {
+	e := m.entity
+	if e.Source == "" {
+		return nil
+	}
+	return m.archive.Source(e.Source)
 }
 
 func mediaTitle(a *glx.GLXFile, id string) string {

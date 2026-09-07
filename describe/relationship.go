@@ -1,51 +1,39 @@
 package describe
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Relationship Entity[glx.Relationship]
 
-func (relationship *Relationship) Describe(w io.Writer) {
-	id := relationship.id
-	r := relationship.entity
-	a := relationship.archive.file
-
-	printReportHeader("Relationship", id)
-	fmt.Fprintln(w)
-
-	printReportItem("Type:", r.Type)
-
-	for _, p := range r.Participants {
-		person := Archive{a}.Person(p.Person)
-		printParticipation(person, p.Role)
-	}
-
-	printRelationshipEvent(w, a, "Start", r.StartEvent)
-	printRelationshipEvent(w, a, "End", r.EndEvent)
-
-	fmt.Fprintln(w)
+// ID implements [NamedSubject].
+func (r *Relationship) ID() string {
+	panic("unimplemented")
 }
 
-func printRelationshipEvent(w io.Writer, a *glx.GLXFile, label, id string) {
-	if id == "" {
-		return
+// Name implements [NamedSubject].
+func (r *Relationship) Name() string {
+	panic("unimplemented")
+}
+
+// Label implements [NamedSubject].
+func (r *Relationship) Label() string {
+	panic("unimplemented")
+}
+
+func (r *Relationship) Describe(rpt Report) {
+
+	rpt.Item("Type:", r.entity.Type)
+
+	for _, p := range r.Participants() {
+		rpt.Reference(p)
 	}
+}
 
-	fmt.Fprintln(w)
-	printSectionHeader(label + " Event: " + id)
+func (r *Relationship) StartEvent() any {
+	return nil
+}
 
-	e, ok := a.Events[id]
-	if !ok { // Probably can't happen. Validation would have failed.
-		printReportItem("Event:", unknown(id, "event"))
-		return
-	}
-
-	printReportItem("Title:", e.Title)
-	printReportItem("Type:", e.Type)
-	printPlaceReference(a, "Place:", e.PlaceID)
-	printReportItem("Date:", e.Date.String())
+func (r *Relationship) Participants() []*Participant {
+	return nil
 }

@@ -52,6 +52,14 @@ func (a Archive) Citation(id string) *Citation {
 	return nil
 }
 
+func (a Archive) Citations(ids []string) []*Citation {
+	var out []*Citation
+	for _, id := range ids {
+		out = append(out, a.Citation(id))
+	}
+	return out
+}
+
 func (a Archive) Event(id string) *Event {
 	if entity, ok := a.file.Events[id]; ok {
 		return &Event{a, id, entity}
@@ -64,6 +72,14 @@ func (a Archive) Media(id string) *Media {
 		return &Media{a, id, entity}
 	}
 	return nil
+}
+
+func (a Archive) Medias(ids []string) []*Media {
+	var out []*Media
+	for _, id := range ids {
+		out = append(out, a.Media(id))
+	}
+	return out
 }
 
 func (a Archive) Person(id string) *Person {
@@ -99,4 +115,12 @@ func (a Archive) Source(id string) *Source {
 		return &Source{a, id, entity}
 	}
 	return nil
+}
+
+func (a Archive) Sources(ids []string) []*Source {
+	var out []*Source
+	for _, id := range ids {
+		out = append(out, a.Source(id))
+	}
+	return out
 }

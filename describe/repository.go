@@ -1,31 +1,28 @@
 package describe
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Repository Entity[glx.Repository]
 
-func (repository *Repository) Describe(w io.Writer) {
-	id := repository.id
-	r := repository.entity
+func (r *Repository) Describe(rpt Report) {
+	rpt.Item("Name:", r.entity.Name)
+	rpt.Item("Type:", r.entity.Type)
+	rpt.Item("Address:", r.entity.Address)
+	rpt.Item("City:", r.entity.City)
+	rpt.Item("State:", r.entity.State)
+	rpt.Item("Postal Code:", r.entity.PostalCode)
+	rpt.Item("Country:", r.entity.Country)
+	rpt.Item("Website:", r.entity.Website)
 
-	printReportHeader("Repository", id)
-	fmt.Fprintln(w)
+}
 
-	printReportItem("Name:", r.Name)
-	printReportItem("Type:", r.Type)
-	printReportItem("Address:", r.Address)
-	printReportItem("City:", r.City)
-	printReportItem("State:", r.State)
-	printReportItem("Postal Code:", r.PostalCode)
-	printReportItem("Country:", r.Country)
-	printReportItem("Website:", r.Website)
-
-	fmt.Fprintln(w)
+func (r *Repository) ID() string {
+	if r == nil {
+		return ""
+	}
+	return r.id
 }
 
 func (r *Repository) Name() string {
@@ -42,34 +39,6 @@ func (r *Repository) Name() string {
 	return name
 }
 
-func repositoryName(a *glx.GLXFile, id string) string {
-	if id == "" {
-		return unspecifiedValue
-	}
-
-	p, ok := a.Repositories[id]
-	if !ok {
-		return unknown(id, "repository")
-	}
-
-	if p.Name == "" {
-		return unnamed(id, "repository")
-	}
-
-	return p.Name
-}
-func (r *Repository) PrintReference() {
-	if r == nil {
-		return
-	}
-	printReference("Repository:", r.Name(), r.id)
-}
-
-func printRepositoryReference(a *glx.GLXFile, label, id string) {
-	name := repositoryName(a, id)
-	if name == unspecifiedValue {
-		printReportItem(label, name)
-		return
-	}
-	printReference(label, id, name)
+func (r *Repository) Label() string {
+	return "Repository"
 }

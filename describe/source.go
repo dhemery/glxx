@@ -1,34 +1,42 @@
 package describe
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Source Entity[glx.Source]
 
-func (s *Source) Describe(w io.Writer) {
+func (s *Source) Describe(r Report) {
 	entity := s.entity
 
-	printReportHeader("Source", s.id)
-	fmt.Fprintln(w)
+	r.Begin(s)
 
-	printReportItem("Title:", s.Title())
+	r.Item("Title:", s.Title())
 	for _, author := range entity.Authors {
-		printReportItem("Author:", author)
+		r.Item("Author:", author)
 	}
-	printReportItem("Date:", entity.Date.String())
-	printReportItem("Language:", entity.Language)
+	r.Item("Date:", entity.Date.String())
+	r.Item("Language:", entity.Language)
 
-	s.Repository().PrintReference()
+	r.Reference(s.Repository())
 
 	for _, m := range s.Media() {
-		m.PrintReference()
+		r.Reference(m)
 	}
 
-	fmt.Fprintln(w)
+	r.End()
+}
+
+func (_ *Source) Label() string {
+	return "Source:"
+}
+
+func (s *Source) ID() string {
+	return s.id
+}
+
+func (s *Source) Name() string {
+	return s.Title()
 }
 
 func (s *Source) Media() []*Media {
@@ -68,39 +76,4 @@ func sourceTitle(a *glx.GLXFile, id string) string {
 	}
 
 	return p.Title
-}
-
-func (s *Source) PrintReference() {
-	printReference("Source:", s.id, s.Title())
-}
-
-func printSourceReference(a *glx.GLXFile, label, id string) {
-	printReference(label, id, sourceTitle(a, id))
-}
-
-func (s *Source) PrintSection() {
-	const header = "Source: %s %s"
-
-	if s == nil {
-		printSectionHeader(fmt.Sprintf(header, "", "(unknown)"))
-		return
-	}
-	printSectionHeader(fmt.Sprintf(header, s.id, ""))
-	printReportItem("Source:", s.Title())
-}
-
-func printSourceSection(a *glx.GLXFile, id string) {
-	const header = "Source: %s %s"
-	if id == "" {
-		printSectionHeader(fmt.Sprintf(header, "(unspecified)", ""))
-		return
-	}
-
-	_, ok := a.Sources[id]
-	if !ok {
-		printSectionHeader(fmt.Sprintf(header, id, "(unknown)"))
-		return
-	}
-	printSectionHeader(fmt.Sprintf(header, id, ""))
-	printReportItem("Source:", sourceTitle(a, id))
 }

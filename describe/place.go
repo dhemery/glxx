@@ -1,26 +1,20 @@
 package describe
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/genealogix/glx/go-glx"
 )
 
-func printPlaceReference(a *glx.GLXFile, label, id string) {
-	p := Archive{a}.Place(id)
-	printReference(label, id, p.Name())
-}
-
 type Place Entity[glx.Place]
 
-func (p *Place) Describe(w io.Writer) {
-	printReportHeader("Place", p.id)
-	fmt.Fprintln(w)
+func (p *Place) Describe(r Report) {
+	r.Item("Name:", p.Name())
+}
 
-	printReportItem("Name:", p.Name())
-
-	fmt.Fprintln(w)
+func (p *Place) ID() string {
+	if p == nil {
+		return ""
+	}
+	return p.id
 }
 
 func (p *Place) Name() string {
@@ -44,4 +38,8 @@ func (p *Place) Name() string {
 
 func (p *Place) Parent() *Place {
 	return p.archive.Place(p.entity.ParentID)
+}
+
+func (p *Place) Label() string {
+	return "Place"
 }

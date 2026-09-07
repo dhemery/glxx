@@ -1,117 +1,81 @@
 package describe
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Assertion Entity[glx.Assertion]
 
-func (a *Assertion) Describe(w io.Writer) {
-	id := a.id
-	glxfile := a.archive.file
-	e := a.entity
-	if e == nil {
-		fmt.Fprintln(w, "NO ASSERTION", id)
-		return
-	}
+func (a *Assertion) ID() string {
+	return a.id
+}
 
-	printReportHeader("Assertion", id)
+func (a *Assertion) Label() string {
+	return "Assertion"
+}
 
-	fmt.Println()
-	printReportItem("Status:", e.Status)
+func (a *Assertion) Describe(r Report) {
+	r.Item("Status:", a.entity.Status)
 
-	fmt.Println()
-	printSubjectSection(w, glxfile, e.Subject)
+	r.BeginReferenceSection(a.Subject())
 
-	fmt.Println()
-	printSectionHeader("Conclusion")
-	printReportItem("Property:", e.Property)
-	if p := e.Participant; p == nil {
-		printReportItem("Value:", e.Value)
+	r.BeginSection("Conclusion")
+	r.Item("Property:", a.entity.Property)
+	p := a.Participant()
+	if p == nil {
+		r.Item("Value", a.entity.Value)
 	} else {
-		person := Archive{glxfile}.Person(p.Person)
-		printParticipation(person, p.Role)
+		r.Reference(p)
 	}
-	printReportItem("Date:", e.Date.String())
-	printReportItem("Confidence:", e.Confidence)
+	r.Item("Date:", a.entity.Date.String())
+	r.Item("Confidence:", a.entity.Confidence)
 
-	for _, id := range e.Citations {
-		fmt.Println()
-		printCitationSection(glxfile, id)
-	}
-	for _, id := range e.Media {
-		printMediaReference(glxfile, "Media:", id)
-	}
-	for _, id := range e.Sources {
-		printSourceSection(glxfile, id)
+	for _, c := range a.Citations() {
+		r.BeginReferenceSection(c)
+		c.Describe(r)
 	}
 
-	fmt.Println()
+	for _, m := range a.Media() {
+		r.BeginReferenceSection(m)
+		m.Describe(r)
+	}
+	for _, s := range a.Sources() {
+		r.BeginReferenceSection(s)
+		s.Describe(r)
+	}
 }
 
-func printSubjectSection(w io.Writer, a *glx.GLXFile, e glx.EntityRef) {
+func (a *Assertion) Sources() []*Source {
+	return a.archive.Sources(a.entity.Sources)
+}
+
+func (a *Assertion) Media() []*Media {
+	return a.archive.Medias(a.entity.Media)
+}
+
+func (a *Assertion) Participant() *Participant {
+	if a.entity.Participant == nil {
+		return nil
+	}
+	p := participant(a.archive, *a.entity.Participant)
+	return &p
+}
+
+func (a *Assertion) Citations() []*Citation {
+	return a.archive.Citations(a.entity.Citations)
+}
+
+func (a *Assertion) Subject() NamedSubject {
+	s := a.entity.Subject
 	switch {
-	case e.Event != "":
-		printEventSubjectSection(a, e.Event)
-	case e.Person != "":
-		person := Archive{a}.Person(e.Person)
-		printPersonSubjectSection(person)
-	case e.Place != "":
-		printPlaceSubjectSection(a, e.Place)
-	case e.Relationship != "":
-		printRelationshipSubjectSection(w, a, e.Relationship)
-	default:
-		return
+	case s.Event != "":
+		return a.archive.Event(s.Event)
+	case s.Person != "":
+		return a.archive.Person(s.Person)
+	case s.Place != "":
+		return a.archive.Place(s.Place)
+	case s.Relationship != "":
+		return a.archive.Relationship(s.Relationship)
 	}
-}
-
-func printRelationshipSubjectSection(w io.Writer, a *glx.GLXFile, id string) {
-	printSectionHeader("Subject Relationship: " + id)
-	r, ok := a.Relationships[id]
-	if !ok {
-		fmt.Println("UNKNOWN RELATIONSHIP")
-	}
-
-	printReportItem("Type:", r.Type)
-
-	for _, p := range r.Participants {
-		person := Archive{a}.Person(p.Person)
-		printParticipation(person, p.Role)
-	}
-
-	printRelationshipEvent(w, a, "Start", r.StartEvent)
-	printRelationshipEvent(w, a, "End", r.EndEvent)
-}
-
-func printPersonSubjectSection(p *Person) {
-	printSectionHeader("Subject Person: " + p.id)
-	printReportItem("Name:", p.Name())
-}
-
-func printPlaceSubjectSection(a *glx.GLXFile, id string) {
-	printSectionHeader("Subject Place: " + id)
-	p := Archive{a}.Place(id)
-	printReportItem("Name:", p.Name())
-}
-
-func printEventSubjectSection(a *glx.GLXFile, id string) {
-	printSectionHeader("Subject Event: " + id)
-
-	e, ok := a.Events[id]
-	if !ok {
-		fmt.Println("UNKNOWN EVENT")
-	}
-
-	printReportItem("Title:", e.Title)
-	printReportItem("Type:", e.Type)
-	printPlaceReference(a, "Place:", e.PlaceID)
-	printReportItem("Date:", e.Date.String())
-
-	for _, p := range e.Participants {
-		person := Archive{a}.Person(p.Person)
-		printParticipation(person, p.Role)
-	}
+	return nil
 }
