@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/dhemery/glxx/describe"
+	"github.com/dhemery/glxx/dump"
 	"github.com/spf13/cobra"
 )
 
@@ -28,8 +30,8 @@ func init() {
 	}
 	glxxCmd.PersistentFlags().StringVarP(&archivePath, "archive", "a", archivePath, "the `dir` of the archive")
 
-	glxxCmd.AddCommand(describeCmd)
-	glxxCmd.AddCommand(dumpCmd)
+	glxxCmd.AddCommand(describe.Command)
+	glxxCmd.AddCommand(dump.Command)
 }
 
 // Execute runs the glxx command.

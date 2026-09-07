@@ -1,4 +1,5 @@
-package cmd
+// Package describe implements the glxx describe command.
+package describe
 
 import (
 	"fmt"
@@ -10,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeCmd = &cobra.Command{
+var Command = &cobra.Command{
 	Use:   "describe",
 	Short: "Describe an entity",
 	Long:  "Describe an entity",
@@ -19,79 +20,154 @@ var describeCmd = &cobra.Command{
 }
 
 func describe(c *cobra.Command, ids []string) error {
-	archive, err := load.Load(c)
+	glxfile, err := load.Load(c)
 	if err != nil {
 		return err
 	}
 
+	archive := Archive{glxfile}
 	id := ids[0]
-	entity := findEntityByID(archive, id)
 
-	switch e := entity.(type) {
-	case *glx.Assertion:
-		describeAssertion(archive, id, e)
-	case *glx.Citation:
-		describeCitation(archive, id, e)
-	case *glx.Event:
-		describeEvent(archive, id, e)
-	case *glx.Media:
-		describeMedia(archive, id, e)
-	case *glx.Person:
-		describePerson(archive, id, e)
-	case *glx.Place:
-		describePlace(archive, id, e)
-	case *glx.Relationship:
-		describeRelationship(archive, id, e)
-	case *glx.Repository:
-		describeRepository(id, e)
-	case *glx.Source:
-		describeSource(archive, id, e)
-	default:
+	entity := archive.Find(id)
+	if entity == nil {
 		return fmt.Errorf("Unknown ID: %s", id)
 	}
 
+	entity.Describe()
 	return nil
 }
 
-func findEntityByID(a *glx.GLXFile, id string) any {
-	if e, ok := a.Assertions[id]; ok {
-		return e
+type Describer interface {
+	Describe()
+}
+
+type Entity[T any] struct {
+	archive Archive
+	id      string
+	entity  *T
+}
+
+type Archive struct {
+	file *glx.GLXFile
+}
+
+func (a Archive) Find(id string) Describer {
+	if d := a.Assertion(id); d != nil {
+		return d
 	}
-	if e := a.Citations[id]; e != nil {
-		return e
+	if d := a.Citation(id); d != nil {
+		return d
 	}
-	if e := a.Events[id]; e != nil {
-		return e
+	if d := a.Event(id); d != nil {
+		return d
 	}
-	if e := a.Media[id]; e != nil {
-		return e
+	if d := a.Media(id); d != nil {
+		return d
 	}
-	if e := a.Persons[id]; e != nil {
-		return e
+	if d := a.Person(id); d != nil {
+		return d
 	}
-	if e := a.Places[id]; e != nil {
-		return e
+	if d := a.Place(id); d != nil {
+		return d
 	}
-	if e := a.Relationships[id]; e != nil {
-		return e
+	if d := a.Relationship(id); d != nil {
+		return d
 	}
-	if e := a.Repositories[id]; e != nil {
-		return e
+	if d := a.Repository(id); d != nil {
+		return d
 	}
-	if e := a.Sources[id]; e != nil {
-		return e
+	if d := a.Source(id); d != nil {
+		return d
 	}
 	return nil
 }
 
-func describeAssertion(a *glx.GLXFile, id string, e *glx.Assertion) {
+func (a Archive) Assertion(id string) *Assertion {
+	return &Assertion{
+		archive: a,
+		id:      id,
+		entity:  a.file.Assertions[id],
+	}
+}
+
+func (a Archive) Citation(id string) *Citation {
+	return &Citation{
+		archive: a,
+		id:      id,
+		entity:  a.file.Citations[id],
+	}
+}
+
+func (a Archive) Event(id string) *Event {
+	return &Event{
+		archive: a,
+		id:      id,
+		entity:  a.file.Events[id],
+	}
+}
+
+func (a Archive) Media(id string) *Media {
+	return &Media{
+		archive: a,
+		id:      id,
+		entity:  a.file.Media[id],
+	}
+}
+
+func (a Archive) Person(id string) *Person {
+	return &Person{
+		archive: a,
+		id:      id,
+		entity:  a.file.Persons[id],
+	}
+}
+
+func (a Archive) Place(id string) *Place {
+	return &Place{
+		archive: a,
+		id:      id,
+		entity:  a.file.Places[id],
+	}
+}
+
+func (a Archive) Relationship(id string) *Relationship {
+	return &Relationship{
+		archive: a,
+		id:      id,
+		entity:  a.file.Relationships[id],
+	}
+}
+
+func (a Archive) Repository(id string) *Repository {
+	return &Repository{
+		archive: a,
+		id:      id,
+		entity:  a.file.Repositories[id],
+	}
+}
+
+func (a Archive) Source(id string) *Source {
+	return &Source{
+		archive: a,
+		id:      id,
+		entity:  a.file.Sources[id],
+	}
+}
+
+type Assertion Entity[glx.Assertion]
+
+func (a *Assertion) Describe() {
+	id := a.id
+	glxfile := a.archive.file
+	e := a.entity
+
 	printReportHeader("Assertion", id)
 
 	fmt.Println()
 	printReportItem("Status:", e.Status)
 
 	fmt.Println()
-	printSubjectSection(a, e.Subject)
+	printSubjectSection(glxfile, e.Subject)
 
 	fmt.Println()
 	printSectionHeader("Conclusion")
@@ -99,26 +175,31 @@ func describeAssertion(a *glx.GLXFile, id string, e *glx.Assertion) {
 	if p := e.Participant; p == nil {
 		printReportItem("Value:", e.Value)
 	} else {
-		printParticipation(a, p.Person, p.Role)
+		printParticipation(glxfile, p.Person, p.Role)
 	}
 	printReportItem("Date:", e.Date.String())
 	printReportItem("Confidence:", e.Confidence)
 
 	for _, id := range e.Citations {
 		fmt.Println()
-		printCitationSection(a, id)
+		printCitationSection(glxfile, id)
 	}
 	for _, id := range e.Media {
-		printMediaReference(a, "Media:", id)
+		printMediaReference(glxfile, "Media:", id)
 	}
 	for _, id := range e.Sources {
-		printSourceSection(a, id)
+		printSourceSection(glxfile, id)
 	}
 
 	fmt.Println()
 }
 
-func describeCitation(a *glx.GLXFile, id string, c *glx.Citation) {
+type Citation Entity[glx.Citation]
+
+func (citation *Citation) Describe() {
+	id := citation.id
+	a := citation.archive.file
+	c := citation.entity
 	printReportHeader("Citation", id)
 	fmt.Println()
 
@@ -131,7 +212,13 @@ func describeCitation(a *glx.GLXFile, id string, c *glx.Citation) {
 	fmt.Println()
 }
 
-func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
+type Event Entity[glx.Event]
+
+func (event *Event) Describe() {
+	id := event.id
+	e := event.entity
+	a := event.archive.file
+
 	printReportHeader("Event", id)
 	fmt.Println()
 
@@ -148,7 +235,14 @@ func describeEvent(a *glx.GLXFile, id string, e *glx.Event) {
 
 	fmt.Println()
 }
-func describeMedia(a *glx.GLXFile, id string, m *glx.Media) {
+
+type Media Entity[glx.Media]
+
+func (media *Media) Describe() {
+	m := media.entity
+	id := media.id
+	a := media.archive.file
+
 	printReportHeader("Media", id)
 	fmt.Println()
 
@@ -163,7 +257,12 @@ func describeMedia(a *glx.GLXFile, id string, m *glx.Media) {
 	fmt.Println()
 }
 
-func describePerson(a *glx.GLXFile, id string, p *glx.Person) {
+type Person Entity[glx.Person]
+
+func (p *Person) Describe() {
+	id := p.id
+	a := p.archive.file
+
 	printReportHeader("Person", id)
 	fmt.Println()
 
@@ -172,7 +271,12 @@ func describePerson(a *glx.GLXFile, id string, p *glx.Person) {
 	fmt.Println()
 }
 
-func describePlace(a *glx.GLXFile, id string, p *glx.Place) {
+type Place Entity[glx.Place]
+
+func (p *Place) Describe() {
+	id := p.id
+	a := p.archive.file
+
 	printReportHeader("Place", id)
 	fmt.Println()
 
@@ -181,7 +285,13 @@ func describePlace(a *glx.GLXFile, id string, p *glx.Place) {
 	fmt.Println()
 }
 
-func describeRelationship(a *glx.GLXFile, id string, r *glx.Relationship) {
+type Relationship Entity[glx.Relationship]
+
+func (relationship *Relationship) Describe() {
+	id := relationship.id
+	r := relationship.entity
+	a := relationship.archive.file
+
 	printReportHeader("Relationship", id)
 	fmt.Println()
 
@@ -197,7 +307,12 @@ func describeRelationship(a *glx.GLXFile, id string, r *glx.Relationship) {
 	fmt.Println()
 }
 
-func describeRepository(id string, r *glx.Repository) {
+type Repository Entity[glx.Repository]
+
+func (repository *Repository) Describe() {
+	id := repository.id
+	r := repository.entity
+
 	printReportHeader("Repository", id)
 	fmt.Println()
 
@@ -213,7 +328,13 @@ func describeRepository(id string, r *glx.Repository) {
 	fmt.Println()
 }
 
-func describeSource(a *glx.GLXFile, id string, s *glx.Source) {
+type Source Entity[glx.Source]
+
+func (source *Source) Describe() {
+	id := source.id
+	s := source.entity
+	a := source.archive.file
+
 	printReportHeader("Source", id)
 	fmt.Println()
 

@@ -1,4 +1,5 @@
-package cmd
+// Package dump implements the glxx dump command.
+package dump
 
 import (
 	"encoding/json/jsontext"
@@ -12,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var dumpCmd = &cobra.Command{
+var Command = &cobra.Command{
 	Use:   "dump",
 	Short: "Dump a GENEALOGIX archive as JSON.",
 	Long:  "Dump a GENEALOGIX archive as JSON.",
@@ -32,15 +33,15 @@ var (
 )
 
 func init() {
-	dumpCmd.Flags().BoolVar(&dumpAssertions, "assertions", dumpAssertions, "Dump assertions")
-	dumpCmd.Flags().BoolVar(&dumpCitations, "citations", dumpCitations, "Dump citations")
-	dumpCmd.Flags().BoolVar(&dumpEvents, "events", dumpEvents, "Dump events")
-	dumpCmd.Flags().BoolVar(&dumpMedia, "media", dumpMedia, "Dump media")
-	dumpCmd.Flags().BoolVar(&dumpPersons, "persons", dumpPersons, "Dump persons")
-	dumpCmd.Flags().BoolVar(&dumpPlaces, "places", dumpPlaces, "Dump places")
-	dumpCmd.Flags().BoolVar(&dumpRelationships, "relationships", dumpRelationships, "Dump relationships")
-	dumpCmd.Flags().BoolVar(&dumpRepositories, "repositories", dumpRepositories, "Dump repositories")
-	dumpCmd.Flags().BoolVar(&dumpSources, "sources", dumpSources, "Dump sources")
+	Command.Flags().BoolVar(&dumpAssertions, "assertions", dumpAssertions, "Dump assertions")
+	Command.Flags().BoolVar(&dumpCitations, "citations", dumpCitations, "Dump citations")
+	Command.Flags().BoolVar(&dumpEvents, "events", dumpEvents, "Dump events")
+	Command.Flags().BoolVar(&dumpMedia, "media", dumpMedia, "Dump media")
+	Command.Flags().BoolVar(&dumpPersons, "persons", dumpPersons, "Dump persons")
+	Command.Flags().BoolVar(&dumpPlaces, "places", dumpPlaces, "Dump places")
+	Command.Flags().BoolVar(&dumpRelationships, "relationships", dumpRelationships, "Dump relationships")
+	Command.Flags().BoolVar(&dumpRepositories, "repositories", dumpRepositories, "Dump repositories")
+	Command.Flags().BoolVar(&dumpSources, "sources", dumpSources, "Dump sources")
 }
 
 func dump(c *cobra.Command, entityIDs []string) error {
