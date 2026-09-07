@@ -45,7 +45,12 @@ func init() {
 }
 
 func dump(c *cobra.Command, entityIDs []string) error {
-	archiveIn, err := load.Load(c)
+	archivePath, err := c.Flags().GetString("archive")
+	if err != nil {
+		return err
+	}
+
+	archiveIn, err := load.Load(archivePath)
 	if err != nil {
 		return err
 	}
