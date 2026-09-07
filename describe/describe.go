@@ -83,75 +83,67 @@ func (a Archive) Find(id string) Describer {
 }
 
 func (a Archive) Assertion(id string) *Assertion {
-	return &Assertion{
-		archive: a,
-		id:      id,
-		entity:  a.file.Assertions[id],
+	entity := a.file.Assertions[id]
+	if entity != nil {
+		return &Assertion{a, id, entity}
 	}
+	return nil
 }
 
 func (a Archive) Citation(id string) *Citation {
-	return &Citation{
-		archive: a,
-		id:      id,
-		entity:  a.file.Citations[id],
+	if entity, ok := a.file.Citations[id]; ok {
+		return &Citation{a, id, entity}
 	}
+	return nil
 }
 
 func (a Archive) Event(id string) *Event {
-	return &Event{
-		archive: a,
-		id:      id,
-		entity:  a.file.Events[id],
+	if entity, ok := a.file.Events[id]; ok {
+		return &Event{a, id, entity}
 	}
+	return nil
 }
 
 func (a Archive) Media(id string) *Media {
-	return &Media{
-		archive: a,
-		id:      id,
-		entity:  a.file.Media[id],
+	if entity, ok := a.file.Media[id]; ok {
+		return &Media{a, id, entity}
 	}
+	return nil
 }
 
 func (a Archive) Person(id string) *Person {
-	return &Person{
-		archive: a,
-		id:      id,
-		entity:  a.file.Persons[id],
+	if entity, ok := a.file.Persons[id]; ok {
+		return &Person{a, id, entity}
 	}
+	return nil
 }
 
 func (a Archive) Place(id string) *Place {
-	return &Place{
-		archive: a,
-		id:      id,
-		entity:  a.file.Places[id],
+	if entity, ok := a.file.Places[id]; ok {
+		return &Place{a, id, entity}
 	}
+	return nil
 }
 
 func (a Archive) Relationship(id string) *Relationship {
-	return &Relationship{
-		archive: a,
-		id:      id,
-		entity:  a.file.Relationships[id],
+	if entity, ok := a.file.Relationships[id]; ok {
+		return &Relationship{a, id, entity}
 	}
+	return nil
 }
 
 func (a Archive) Repository(id string) *Repository {
-	return &Repository{
-		archive: a,
-		id:      id,
-		entity:  a.file.Repositories[id],
+	if entity, ok := a.file.Repositories[id]; ok {
+		return &Repository{a, id, entity}
 	}
+	return nil
 }
 
 func (a Archive) Source(id string) *Source {
-	return &Source{
-		archive: a,
-		id:      id,
-		entity:  a.file.Sources[id],
+	if entity, ok := a.file.Sources[id]; ok {
+		return &Source{a, id, entity}
 	}
+	return nil
 }
 
 type Assertion Entity[glx.Assertion]
@@ -160,6 +152,10 @@ func (a *Assertion) Describe() {
 	id := a.id
 	glxfile := a.archive.file
 	e := a.entity
+	if e == nil {
+		fmt.Println("NO ASSERTION", id)
+		return
+	}
 
 	printReportHeader("Assertion", id)
 
@@ -175,7 +171,8 @@ func (a *Assertion) Describe() {
 	if p := e.Participant; p == nil {
 		printReportItem("Value:", e.Value)
 	} else {
-		printParticipation(glxfile, p.Person, p.Role)
+		person := Archive{glxfile}.Person(p.Person)
+		printParticipation(person, p.Role)
 	}
 	printReportItem("Date:", e.Date.String())
 	printReportItem("Confidence:", e.Confidence)
@@ -230,7 +227,8 @@ func (event *Event) Describe() {
 	fmt.Println()
 	printSectionHeader("Participants")
 	for _, p := range e.Participants {
-		printParticipation(a, p.Person, p.Role)
+		person := Archive{a}.Person(p.Person)
+		printParticipation(person, p.Role)
 	}
 
 	fmt.Println()
@@ -260,29 +258,55 @@ func (media *Media) Describe() {
 type Person Entity[glx.Person]
 
 func (p *Person) Describe() {
-	id := p.id
-	a := p.archive.file
-
-	printReportHeader("Person", id)
+	printReportHeader("Person", p.id)
 	fmt.Println()
 
-	printReportItem("Name:", personName(a, id))
+	printReportItem("Name:", p.Name())
 
 	fmt.Println()
+}
+
+func (p *Person) Name() string {
+	name := glx.PersonDisplayName(p.entity)
+	if name == "" {
+		return unnamed(p.id, "person")
+	}
+
+	return name
 }
 
 type Place Entity[glx.Place]
 
 func (p *Place) Describe() {
-	id := p.id
-	a := p.archive.file
-
-	printReportHeader("Place", id)
+	printReportHeader("Place", p.id)
 	fmt.Println()
 
-	printReportItem("Name:", placeName(a, id))
+	printReportItem("Name:", p.Name())
 
 	fmt.Println()
+}
+
+func (p *Place) Name() string {
+	if p == nil {
+		return unspecifiedValue
+	}
+
+	name := p.entity.Name
+
+	if name == "" {
+		return unnamed(p.id, "place")
+	}
+
+	parent := p.Parent()
+	if parent == nil {
+		return name
+	}
+
+	return name + ", " + parent.Name()
+}
+
+func (p *Place) Parent() *Place {
+	return p.archive.Place(p.entity.ParentID)
 }
 
 type Relationship Entity[glx.Relationship]
@@ -298,7 +322,8 @@ func (relationship *Relationship) Describe() {
 	printReportItem("Type:", r.Type)
 
 	for _, p := range r.Participants {
-		printParticipation(a, p.Person, p.Role)
+		person := Archive{a}.Person(p.Person)
+		printParticipation(person, p.Role)
 	}
 
 	printRelationshipEvent(a, "Start", r.StartEvent)
@@ -380,7 +405,8 @@ func printMediaReference(a *glx.GLXFile, label, id string) {
 }
 
 func printPlaceReference(a *glx.GLXFile, label, id string) {
-	printReference(label, id, placeName(a, id))
+	p := Archive{a}.Place(id)
+	printReference(label, id, p.Name())
 }
 
 func printRelationshipEvent(a *glx.GLXFile, label, id string) {
@@ -437,7 +463,8 @@ func printSubjectSection(a *glx.GLXFile, e glx.EntityRef) {
 	case e.Event != "":
 		printEventSubjectSection(a, e.Event)
 	case e.Person != "":
-		printPersonSubjectSection(a, e.Person)
+		person := Archive{a}.Person(e.Person)
+		printPersonSubjectSection(person)
 	case e.Place != "":
 		printPlaceSubjectSection(a, e.Place)
 	case e.Relationship != "":
@@ -457,21 +484,23 @@ func printRelationshipSubjectSection(a *glx.GLXFile, id string) {
 	printReportItem("Type:", r.Type)
 
 	for _, p := range r.Participants {
-		printParticipation(a, p.Person, p.Role)
+		person := Archive{a}.Person(p.Person)
+		printParticipation(person, p.Role)
 	}
 
 	printRelationshipEvent(a, "Start", r.StartEvent)
 	printRelationshipEvent(a, "End", r.EndEvent)
 }
 
-func printPersonSubjectSection(a *glx.GLXFile, id string) {
-	printSectionHeader("Subject Person: " + id)
-	printReportItem("Name:", personName(a, id))
+func printPersonSubjectSection(p *Person) {
+	printSectionHeader("Subject Person: " + p.id)
+	printReportItem("Name:", p.Name())
 }
 
 func printPlaceSubjectSection(a *glx.GLXFile, id string) {
 	printSectionHeader("Subject Place: " + id)
-	printReportItem("Name:", placeName(a, id))
+	p := Archive{a}.Place(id)
+	printReportItem("Name:", p.Name())
 }
 
 func printEventSubjectSection(a *glx.GLXFile, id string) {
@@ -488,29 +517,9 @@ func printEventSubjectSection(a *glx.GLXFile, id string) {
 	printReportItem("Date:", e.Date.String())
 
 	for _, p := range e.Participants {
-		printParticipation(a, p.Person, p.Role)
+		person := Archive{a}.Person(p.Person)
+		printParticipation(person, p.Role)
 	}
-}
-
-func placeName(a *glx.GLXFile, id string) string {
-	if id == "" {
-		return unspecifiedValue
-	}
-
-	p, ok := a.Places[id]
-	if !ok {
-		return unknown(id, "place")
-	}
-
-	if p.Name == "" {
-		return unnamed(id, "place")
-	}
-
-	if p.ParentID == "" {
-		return p.Name
-	}
-
-	return p.Name + ", " + placeName(a, p.ParentID)
 }
 
 func mediaTitle(a *glx.GLXFile, id string) string {
@@ -528,20 +537,6 @@ func mediaTitle(a *glx.GLXFile, id string) string {
 	}
 
 	return m.Title
-}
-
-func personName(a *glx.GLXFile, id string) string {
-	p, ok := a.Persons[id]
-	if !ok {
-		return unknown(id, "person")
-	}
-
-	name := glx.PersonDisplayName(p)
-	if name == "" {
-		return unnamed(id, "person")
-	}
-
-	return name
 }
 
 func repositoryName(a *glx.GLXFile, id string) string {
@@ -578,15 +573,14 @@ func sourceTitle(a *glx.GLXFile, id string) string {
 	return p.Title
 }
 
-func printParticipation(a *glx.GLXFile, personID string, role string) {
+func printParticipation(p *Person, role string) {
 	label := strings.ToUpper(role[:1]) + role[1:] + ":"
-	printPersonReference(a, label, personID)
+	printPersonReference(label, p)
 }
 
-func printPersonReference(a *glx.GLXFile, label, personID string) {
-	name := personName(a, personID)
-	printReportItem(label, name)
-	printReportItem("  id:", personID)
+func printPersonReference(label string, p *Person) {
+	printReportItem(label, p.Name())
+	printReportItem("  id:", p.id)
 }
 
 func printReference(label, id, value string) {
