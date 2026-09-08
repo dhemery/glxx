@@ -45,5 +45,5 @@ func (e *Event) Place() *Place {
 }
 
 func (e *Event) Participants() []*Participant {
-	return participants(e.archive, e.entity.Participants)
+	return e.archive.Participants(e.entity.Participants)
 }

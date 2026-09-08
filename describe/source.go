@@ -26,8 +26,9 @@ func (s *Source) Describe(r Report) {
 }
 
 func (s *Source) DescribeAsReference(r Report) {
-	if s != nil {
+	if s == nil {
 		r.Item("Source", "")
+		return
 	}
 	r.Reference("Source", s.Title(), s.id)
 

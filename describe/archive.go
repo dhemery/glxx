@@ -82,6 +82,19 @@ func (a Archive) Medias(ids []string) []*Media {
 	return out
 }
 
+func (a Archive) Participant(p glx.Participant) *Participant {
+	person := a.Person(p.Person)
+	return &Participant{person: person, role: p.Role}
+}
+
+func (a Archive) Participants(pp []glx.Participant) []*Participant {
+	var out []*Participant
+	for _, p := range pp {
+		out = append(out, a.Participant(p))
+	}
+	return out
+}
+
 func (a Archive) Person(id string) *Person {
 	if entity, ok := a.file.Persons[id]; ok {
 		return &Person{a, id, entity}

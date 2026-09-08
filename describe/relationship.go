@@ -46,5 +46,5 @@ func (r *Relationship) StartEvent() *Event {
 }
 
 func (r *Relationship) Participants() []*Participant {
-	return participants(r.archive, r.entity.Participants)
+	return r.archive.Participants(r.entity.Participants)
 }

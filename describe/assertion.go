@@ -74,5 +74,5 @@ func (a *Assertion) Participant() *Participant {
 	if a.entity.Participant == nil {
 		return nil
 	}
-	return participant(a.archive, *a.entity.Participant)
+	return a.archive.Participant(*a.entity.Participant)
 }
