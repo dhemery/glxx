@@ -17,14 +17,10 @@ func (r *Relationship) Describe(rpt Report) {
 		p.DescribeAsReference(rpt)
 	}
 
-	r.DescribeEvents(rpt)
+	r.StartEvent().DescribeAsSection(rpt, "Start Event")
+	r.EndEvent().DescribeAsSection(rpt, "End Event")
 
 	rpt.End()
-}
-
-func (r *Relationship) DescribeEvents(rpt Report) {
-	r.EndEvent().DescribeAsSection(rpt, "Start Event")
-	r.EndEvent().DescribeAsSection(rpt, "End Event")
 }
 
 func (r *Relationship) DescribeAsSection(rpt Report, label string) {
@@ -38,13 +34,13 @@ func (r *Relationship) DescribeAsSection(rpt Report, label string) {
 }
 
 func (r *Relationship) EndEvent() *Event {
-	return nil
-}
-
-func (r *Relationship) StartEvent() *Event {
-	return nil
+	return r.archive.Event(r.entity.EndEvent)
 }
 
 func (r *Relationship) Participants() []*Participant {
 	return r.archive.Participants(r.entity.Participants)
+}
+
+func (r *Relationship) StartEvent() *Event {
+	return r.archive.Event(r.entity.StartEvent)
 }
