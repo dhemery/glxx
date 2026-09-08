@@ -13,7 +13,7 @@ func (e *Event) Describe(r Report) {
 
 	r.Item("Title", e.entity.Title)
 	r.Item("Type", e.entity.Type)
-	e.Place().DescribeAsReference(r)
+	e.Place().DescribeAsReference(r, "Place")
 	r.Item("Date", e.entity.Date.String())
 
 	r.BeginSection("Participants")
@@ -32,7 +32,7 @@ func (e *Event) DescribeAsSection(r Report, label string) {
 
 	r.Item("Title", e.entity.Title)
 	r.Item("Type", e.entity.Type)
-	e.Place().DescribeAsReference(r)
+	e.Place().DescribeAsReference(r, "Place")
 	r.Item("Date", e.entity.Date.String())
 
 	for _, p := range e.Participants() {
