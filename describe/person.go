@@ -17,7 +17,7 @@ func (p *Person) Describe(r Report) {
 }
 
 func (p *Person) DescribeAsReference(r Report, label string) {
-	r.Reference("Person", p.Name(), p.id)
+	r.Reference(label, p.Name(), p.id)
 }
 
 func (p *Person) DescribeAsSection(r Report, label string) {
