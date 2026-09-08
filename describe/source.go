@@ -7,36 +7,51 @@ import (
 type Source Entity[glx.Source]
 
 func (s *Source) Describe(r Report) {
-	entity := s.entity
+	r.Begin("Source", s.id)
 
-	r.Begin(s)
-
-	r.Item("Title:", s.Title())
-	for _, author := range entity.Authors {
-		r.Item("Author:", author)
+	r.Item("Title", s.Title())
+	for _, author := range s.entity.Authors {
+		r.Item("Author", author)
 	}
-	r.Item("Date:", entity.Date.String())
-	r.Item("Language:", entity.Language)
+	r.Item("Date", s.entity.Date.String())
+	r.Item("Language", s.entity.Language)
 
-	r.Reference(s.Repository())
+	s.Repository().DescribeAsReference(r)
 
 	for _, m := range s.Media() {
-		r.Reference(m)
+		m.DescribeAsReference(r)
 	}
 
 	r.End()
 }
 
-func (_ *Source) Label() string {
-	return "Source:"
+func (s *Source) DescribeAsReference(r Report) {
+	if s != nil {
+		r.Item("Source", "")
+	}
+	r.Reference("Source", s.Title(), s.id)
+
 }
 
-func (s *Source) ID() string {
-	return s.id
-}
+func (s *Source) DescribeAsSection(r Report) {
+	if s == nil {
+		return
+	}
 
-func (s *Source) Name() string {
-	return s.Title()
+	r.BeginSection("Source: " + s.id)
+
+	r.Item("Title", s.Title())
+	for _, author := range s.entity.Authors {
+		r.Item("Author", author)
+	}
+	r.Item("Date", s.entity.Date.String())
+	r.Item("Language", s.entity.Language)
+
+	s.Repository().DescribeAsReference(r)
+
+	for _, m := range s.Media() {
+		m.DescribeAsReference(r)
+	}
 }
 
 func (s *Source) Media() []*Media {
@@ -49,31 +64,9 @@ func (s *Source) Media() []*Media {
 }
 
 func (s *Source) Repository() *Repository {
-	return s.archive.Repository(s.id)
+	return s.archive.Repository(s.entity.RepositoryID)
 }
 
 func (s *Source) Title() string {
-	title := s.entity.Title
-	if title == "" {
-		return unnamed(s.id, "source")
-	}
-
-	return title
-}
-
-func sourceTitle(a *glx.GLXFile, id string) string {
-	if id == "" {
-		return unspecifiedValue
-	}
-
-	p, ok := a.Sources[id]
-	if !ok {
-		return unknown(id, "source")
-	}
-
-	if p.Title == "" {
-		return unnamed(id, "source")
-	}
-
-	return p.Title
+	return s.entity.Title
 }

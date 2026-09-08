@@ -11,8 +11,9 @@ type Report struct {
 	w io.Writer
 }
 
-func (r Report) Begin(s Subject) {
-	fmt.Fprintf(r.w, "=== %s: %s ===\n", s.Label(), s.ID())
+func (r Report) Begin(label, id string) {
+	fmt.Fprintf(r.w, "=== %s: %s ===\n", label, id)
+	fmt.Fprintln(r.w)
 }
 
 func (r Report) BeginSection(title string) {
@@ -24,46 +25,22 @@ func (r Report) BeginSection(title string) {
 	fmt.Fprintln(r.w, prefix+strings.Repeat("─", remaining))
 }
 
-func (r Report) BeginReferenceSection(s NamedSubject) {
-	title := fmt.Sprintf("%s: %s", s.Label(), s.ID())
-	r.BeginSection(title)
-}
-
-func (r Report) Line(a ...any) {
-	fmt.Fprintln(r.w, a...)
+func (r Report) End() {
+	fmt.Fprintln(r.w)
 }
 
 func (r Report) Item(label, value string) {
+	const unspecifiedValue = "—"
+
 	if value == "" {
 		value = unspecifiedValue
 	}
 	fmt.Fprintf(r.w, "  %-18s%s\n", label+":", value)
 }
 
-func (r Report) Reference(s NamedSubject) {
-	r.Item(s.Label(), s.Name())
-	id := s.ID()
-	if id == "" {
-		return
+func (r Report) Reference(label, value, id string) {
+	r.Item(label, value)
+	if id != "" {
+		r.Item("  id", id)
 	}
-	r.Item("  id:", s.ID())
-
-}
-
-func (r Report) End() {
-	fmt.Fprintln(r.w)
-}
-
-const unspecifiedValue = "—"
-
-func unknown(id, typ string) string {
-	return formattedLabeledID("unknown", id, typ)
-}
-
-func unnamed(id, typ string) string {
-	return formattedLabeledID("unnamed", id, typ)
-}
-
-func formattedLabeledID(label, id, typ string) string {
-	return fmt.Sprintf("%s %s id %s", label, typ, id)
 }

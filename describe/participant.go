@@ -1,31 +1,32 @@
 package describe
 
-import "github.com/genealogix/glx/go-glx"
+import (
+	"strings"
+
+	"github.com/genealogix/glx/go-glx"
+)
 
 type Participant struct {
 	person *Person
 	role   string
 }
 
-func (p Participant) ID() string {
-	return p.person.ID()
+func (p *Participant) DescribeAsReference(r Report) {
+	label := strings.ToUpper(p.role[:1]) + p.role[1:]
+	p.person.DescribeAsReference(r, label)
 }
 
 func (p Participant) Name() string {
 	return p.person.Name()
 }
 
-func (p Participant) Label() string {
-	return p.role
-}
-
-func participant(a Archive, p glx.Participant) Participant {
+func participant(a Archive, p glx.Participant) *Participant {
 	person := a.Person(p.Person)
-	return Participant{person: person, role: p.Role}
+	return &Participant{person: person, role: p.Role}
 }
 
-func participants(a Archive, pp []glx.Participant) []Participant {
-	var out []Participant
+func participants(a Archive, pp []glx.Participant) []*Participant {
+	var out []*Participant
 	for _, p := range pp {
 		out = append(out, participant(a, p))
 	}

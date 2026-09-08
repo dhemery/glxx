@@ -1,40 +1,49 @@
 package describe
 
 import (
+	"fmt"
+
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Event Entity[glx.Event]
 
-func (event *Event) Describe(r Report) {
+func (e *Event) Describe(r Report) {
+	r.Begin("Event", e.id)
 
-	r.Item("Title:", event.entity.Title)
-	r.Item("Type:", event.entity.Type)
-	r.Reference(event.Place())
-	r.Item("Date:", event.entity.Date.String())
+	r.Item("Title", e.entity.Title)
+	r.Item("Type", e.entity.Type)
+	e.Place().DescribeAsReference(r)
+	r.Item("Date", e.entity.Date.String())
 
 	r.BeginSection("Participants")
-	for _, p := range event.Participants() {
-		r.Reference(p)
+	for _, p := range e.Participants() {
+		p.DescribeAsReference(r)
 	}
+
+	r.End()
 }
 
-func (event *Event) ID() string {
-	return event.id
-}
+func (e *Event) DescribeAsSection(r Report, label string) {
+	if e == nil {
+		return
+	}
+	r.BeginSection(fmt.Sprintf("%s: %s", label, e.id))
 
-func (event *Event) Name() string {
-	panic("unimplemented")
-}
+	r.Item("Title", e.entity.Title)
+	r.Item("Type", e.entity.Type)
+	e.Place().DescribeAsReference(r)
+	r.Item("Date", e.entity.Date.String())
 
-func (event *Event) Label() string {
-	return "Event"
+	for _, p := range e.Participants() {
+		p.DescribeAsReference(r)
+	}
 }
 
 func (e *Event) Place() *Place {
 	return e.archive.Place(e.entity.PlaceID)
 }
 
-func (e *Event) Participants() []Participant {
+func (e *Event) Participants() []*Participant {
 	return participants(e.archive, e.entity.Participants)
 }

@@ -1,39 +1,50 @@
 package describe
 
 import (
+	"fmt"
+
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Relationship Entity[glx.Relationship]
 
-// ID implements [NamedSubject].
-func (r *Relationship) ID() string {
-	panic("unimplemented")
-}
-
-// Name implements [NamedSubject].
-func (r *Relationship) Name() string {
-	panic("unimplemented")
-}
-
-// Label implements [NamedSubject].
-func (r *Relationship) Label() string {
-	panic("unimplemented")
-}
-
 func (r *Relationship) Describe(rpt Report) {
+	rpt.Begin("Relationship", r.id)
 
-	rpt.Item("Type:", r.entity.Type)
+	rpt.Item("Type", r.entity.Type)
 
 	for _, p := range r.Participants() {
-		rpt.Reference(p)
+		p.DescribeAsReference(rpt)
+	}
+
+	r.DescribeEvents(rpt)
+
+	rpt.End()
+}
+
+func (r *Relationship) DescribeEvents(rpt Report) {
+	r.EndEvent().DescribeAsSection(rpt, "Start Event")
+	r.EndEvent().DescribeAsSection(rpt, "End Event")
+}
+
+func (r *Relationship) DescribeAsSection(rpt Report, label string) {
+	rpt.BeginSection(fmt.Sprintf("%s: %s", label, r.id))
+
+	rpt.Item("Type", r.entity.Type)
+
+	for _, p := range r.Participants() {
+		p.DescribeAsReference(rpt)
 	}
 }
 
-func (r *Relationship) StartEvent() any {
+func (r *Relationship) EndEvent() *Event {
+	return nil
+}
+
+func (r *Relationship) StartEvent() *Event {
 	return nil
 }
 
 func (r *Relationship) Participants() []*Participant {
-	return nil
+	return participants(r.archive, r.entity.Participants)
 }

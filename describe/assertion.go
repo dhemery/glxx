@@ -6,43 +6,60 @@ import (
 
 type Assertion Entity[glx.Assertion]
 
-func (a *Assertion) ID() string {
-	return a.id
-}
-
-func (a *Assertion) Label() string {
-	return "Assertion"
-}
-
 func (a *Assertion) Describe(r Report) {
-	r.Item("Status:", a.entity.Status)
+	r.Begin("Assertion", a.id)
 
-	r.BeginReferenceSection(a.Subject())
+	r.Item("Status", a.entity.Status)
 
-	r.BeginSection("Conclusion")
-	r.Item("Property:", a.entity.Property)
-	p := a.Participant()
-	if p == nil {
-		r.Item("Value", a.entity.Value)
-	} else {
-		r.Reference(p)
-	}
-	r.Item("Date:", a.entity.Date.String())
-	r.Item("Confidence:", a.entity.Confidence)
+	a.DescribeSubject(r)
+
+	a.DescribeConclusion(r)
 
 	for _, c := range a.Citations() {
-		r.BeginReferenceSection(c)
-		c.Describe(r)
+		c.DescribeAsSection(r)
 	}
 
 	for _, m := range a.Media() {
-		r.BeginReferenceSection(m)
-		m.Describe(r)
+		m.DescribeAsSection(r)
 	}
 	for _, s := range a.Sources() {
-		r.BeginReferenceSection(s)
-		s.Describe(r)
+		s.DescribeAsSection(r)
 	}
+
+	r.End()
+}
+
+func (a *Assertion) DescribeConclusion(r Report) {
+	r.BeginSection("Conclusion")
+
+	r.Item("Property", a.entity.Property)
+
+	if p := a.Participant(); p != nil {
+		p.DescribeAsReference(r)
+	} else {
+		r.Item("Value", a.entity.Value)
+	}
+
+	r.Item("Date", a.entity.Date.String())
+	r.Item("Confidence", a.entity.Confidence)
+}
+
+func (a *Assertion) DescribeSubject(r Report) {
+	s := a.entity.Subject
+	switch {
+	case s.Event != "":
+		a.archive.Event(s.Event).DescribeAsSection(r, "Subject Event")
+	case s.Person != "":
+		a.archive.Person(s.Person).DescribeAsSection(r, "Subject Person")
+	case s.Place != "":
+		a.archive.Place(s.Place).DescribeAsSection(r, "Subject Place")
+	case s.Relationship != "":
+		a.archive.Relationship(s.Relationship).DescribeAsSection(r, "Subject Relationship")
+	}
+}
+
+func (a *Assertion) Citations() []*Citation {
+	return a.archive.Citations(a.entity.Citations)
 }
 
 func (a *Assertion) Sources() []*Source {
@@ -57,25 +74,5 @@ func (a *Assertion) Participant() *Participant {
 	if a.entity.Participant == nil {
 		return nil
 	}
-	p := participant(a.archive, *a.entity.Participant)
-	return &p
-}
-
-func (a *Assertion) Citations() []*Citation {
-	return a.archive.Citations(a.entity.Citations)
-}
-
-func (a *Assertion) Subject() NamedSubject {
-	s := a.entity.Subject
-	switch {
-	case s.Event != "":
-		return a.archive.Event(s.Event)
-	case s.Person != "":
-		return a.archive.Person(s.Person)
-	case s.Place != "":
-		return a.archive.Place(s.Place)
-	case s.Relationship != "":
-		return a.archive.Relationship(s.Relationship)
-	}
-	return nil
+	return participant(a.archive, *a.entity.Participant)
 }

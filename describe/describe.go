@@ -23,19 +23,8 @@ type Entity[T any] struct {
 	entity  *T
 }
 
-type Subject interface {
-	Label() string
-	ID() string
-}
-
 type Describer interface {
-	Subject
 	Describe(Report)
-}
-
-type NamedSubject interface {
-	Subject
-	Name() string
 }
 
 func describe(c *cobra.Command, ids []string) error {
@@ -59,9 +48,7 @@ func describe(c *cobra.Command, ids []string) error {
 
 	r := Report{os.Stdout}
 
-	r.Begin(entity)
 	entity.Describe(r)
-	r.End()
 
 	return nil
 }

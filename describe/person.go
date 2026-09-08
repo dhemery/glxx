@@ -1,28 +1,33 @@
 package describe
 
 import (
+	"fmt"
+
 	"github.com/genealogix/glx/go-glx"
 )
 
 type Person Entity[glx.Person]
 
 func (p *Person) Describe(r Report) {
+	r.Begin("Person", p.id)
+
+	r.Item("Name", p.Name())
+
+	r.End()
+}
+
+func (p *Person) DescribeAsReference(r Report, label string) {
+	r.Reference("Person", p.Name(), p.id)
+}
+
+func (p *Person) DescribeAsSection(r Report, label string) {
+	if p == nil {
+		return
+	}
+	r.BeginSection(fmt.Sprintf("%s: %s", label, p.id))
 	r.Item("Name", p.Name())
 }
 
-func (p *Person) ID() string {
-	return p.id
-}
-
 func (p *Person) Name() string {
-	name := glx.PersonDisplayName(p.entity)
-	if name == "" {
-		return unnamed(p.id, p.Label())
-	}
-
-	return name
-}
-
-func (p *Person) Label() string {
-	return "Person"
+	return glx.PersonDisplayName(p.entity)
 }

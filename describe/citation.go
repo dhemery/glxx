@@ -7,11 +7,29 @@ import (
 type Citation Entity[glx.Citation]
 
 func (c *Citation) Describe(r Report) {
-	r.Reference(c.Source())
-	r.Reference(c.Repository())
+	r.Begin("Citation", c.id)
+
+	c.Source().DescribeAsReference(r)
+	c.Repository().DescribeAsReference(r)
 
 	for _, m := range c.Media() {
-		r.Reference(m)
+		m.DescribeAsReference(r)
+	}
+
+	r.End()
+}
+
+func (c *Citation) DescribeAsSection(r Report) {
+	if c == nil {
+		return
+	}
+	r.BeginSection("Citation: " + c.id)
+
+	c.Source().DescribeAsReference(r)
+	c.Repository().DescribeAsReference(r)
+
+	for _, m := range c.Media() {
+		m.DescribeAsReference(r)
 	}
 }
 
@@ -25,14 +43,6 @@ func (c *Citation) Media() []*Media {
 		out = append(out, c.archive.Media(m))
 	}
 	return out
-}
-
-func (c *Citation) Name() string {
-	panic("unimplemented")
-}
-
-func (c *Citation) Label() string {
-	return "Citation"
 }
 
 func (c *Citation) Repository() *Repository {
