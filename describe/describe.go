@@ -4,17 +4,18 @@ package describe
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/dhemery/glxx/load"
 	"github.com/spf13/cobra"
 )
 
 var Command = &cobra.Command{
-	Use:   "describe",
+	Use:   "describe [flags] id...",
 	Short: "Describe an entity",
 	Long:  "Describe an entity",
 	RunE:  describe,
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.MinimumNArgs(1),
 }
 
 type Entity[T any] struct {
@@ -38,17 +39,23 @@ func describe(c *cobra.Command, ids []string) error {
 		return err
 	}
 
-	archive := Archive{glxfile}
-	id := ids[0]
-
-	entity := archive.Find(id)
-	if entity == nil {
-		return fmt.Errorf("Unknown ID: %s", id)
-	}
-
+	var unknowns []string
 	r := Report{os.Stdout}
 
-	entity.Describe(r)
+	archive := Archive{glxfile}
+	for _, id := range ids {
+		entity := archive.Find(id)
+		if entity == nil {
+			unknowns = append(unknowns, id)
+			continue
+		}
+
+		entity.Describe(r)
+	}
+
+	if len(unknowns) > 0 {
+		return fmt.Errorf("Unknown: %s", strings.Join(unknowns, ", "))
+	}
 
 	return nil
 }
