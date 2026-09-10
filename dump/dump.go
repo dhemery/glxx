@@ -5,6 +5,7 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -115,7 +116,11 @@ func dump(c *cobra.Command, entityIDs []string) error {
 		archiveOut = archiveIn
 	}
 
-	return json.MarshalWrite(os.Stdout, archiveOut,
+	return WriteJSON(os.Stdout, archiveOut)
+}
+
+func WriteJSON(w io.Writer, in any) error {
+	return json.MarshalWrite(w, in,
 		jsontext.WithIndent("  "),
 		json.OmitZeroStructFields(true))
 }
