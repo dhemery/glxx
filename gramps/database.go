@@ -88,10 +88,9 @@ type PrimaryRecord struct {
 
 type Citation struct {
 	PrimaryRecord
+	Date
 	Page       string      `xml:"page"`
 	Confidence uint8       `xml:"confidence"`
-	DateStr    DateStr     `xml:"datestr"`
-	DateVal    DateVal     `xml:"dateval"`
 	Attributes []Attribute `xml:"srcattribute"`
 	Media      []MediaRef  `xml:"objref"`
 	Notes      []NoteRef   `xml:"noteref"`
@@ -100,10 +99,8 @@ type Citation struct {
 
 type Event struct {
 	PrimaryRecord
+	Date
 	Type        string        `xml:"type"`
-	DateSpan    []DateSpan    `xml:"datespan"`
-	DateStr     []DateStr     `xml:"datestr"`
-	DateVal     []DateVal     `xml:"dateval"`
 	Place       PlaceRef      `xml:"place"`
 	Description string        `xml:"description"`
 	Attributes  []Attribute   `xml:"attribute"`
@@ -127,8 +124,8 @@ type Family struct {
 
 type Media struct {
 	PrimaryRecord
+	Date
 	File       MediaFile     `xml:"file"`
-	Date       []DateVal     `xml:"dateval"`
 	Attributes []Attribute   `xml:"attribute"`
 	Citations  []CitationRef `xml:"citationref"`
 	Notes      []NoteRef     `xml:"noteref"`
@@ -201,12 +198,12 @@ type Source struct {
 
 type Address struct {
 	Unknown `json:"unknown"`
-	DateStr DateStr `xml:"datestr"`
-	Street  string  `xml:"street"`
-	City    string  `xml:"city"`
-	State   string  `xml:"state"`
-	Country string  `xml:"country"`
-	Postal  string  `xml:"postal"`
+	Date
+	Street  string `xml:"street"`
+	City    string `xml:"city"`
+	State   string `xml:"state"`
+	Country string `xml:"country"`
+	Postal  string `xml:"postal"`
 }
 
 type Attribute struct {
@@ -234,21 +231,25 @@ type Coordinates struct {
 	Latitude  string `xml:"lat,attr"`
 }
 
-type DateStr struct {
+type Date struct {
 	Unknown
+	DateSpan DateSpan `xml:"datespan"`
+	DateStr  DateStr  `xml:"datestr"`
+	DateVal  DateVal  `xml:"dateval"`
+}
+
+type DateStr struct {
 	Val string `xml:"val,attr"`
 }
 
 // A DateVal represents a date or range of dates,
 // possibly with qualifiers such as "about" or "before."
 type DateVal struct {
-	Unknown
 	Val  string `xml:"val,attr"`
 	Type string `xml:"type,attr"`
 }
 
 type DateSpan struct {
-	Unknown
 	Start string `xml:"start,attr"`
 	Stop  string `xml:"stop,attr"`
 }
@@ -298,15 +299,13 @@ type NoteRef struct {
 type PersonName struct {
 	Unknown
 	Privacy
+	Date
 	Type       string        `xml:"type,attr"`
 	Alt        string        `xml:"alt,attr"`
 	Title      string        `xml:"title"`
 	First      string        `xml:"first"`
 	Surname    string        `xml:"surname"`
 	Suffix     string        `xml:"suffix"`
-	DateStr    DateStr       `xml:"datestr"`
-	DateVal    DateVal       `xml:"dateval"`
-	DateSpan   DateSpan      `xml:"datespan"`
 	Call       string        `xml:"call"`
 	Nick       string        `xml:"nick"`
 	FamilyNick string        `xml:"familynick"`
@@ -328,10 +327,10 @@ type PlaceName struct {
 // PlaceRef reprents that a place is or was encompassed by an encompassing place.
 type PlaceRef struct {
 	Unknown
+	Date
 	// Reference to the encompassing place.
 	PlaceHandle string `xml:"hlink,attr"`
 	// The date or dates of the relationship.
-	Date []DateVal `xml:"dateval"`
 }
 
 // Privacy indicates whether an object is private
