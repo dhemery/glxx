@@ -18,6 +18,8 @@ func (m *Media) Describe(r Report) {
 
 	m.Source().DescribeAsReference(r)
 
+	r.Notes(m.entity.Notes)
+
 	r.End()
 }
 

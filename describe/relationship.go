@@ -20,6 +20,8 @@ func (r *Relationship) Describe(rpt Report) {
 	r.StartEvent().DescribeAsSection(rpt, "Start Event")
 	r.EndEvent().DescribeAsSection(rpt, "End Event")
 
+	rpt.Notes(r.entity.Notes)
+
 	rpt.End()
 }
 

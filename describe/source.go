@@ -22,6 +22,8 @@ func (s *Source) Describe(r Report) {
 		m.DescribeAsReference(r)
 	}
 
+	r.Notes(s.entity.Notes)
+
 	r.End()
 }
 

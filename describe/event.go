@@ -21,6 +21,8 @@ func (e *Event) Describe(r Report) {
 		p.DescribeAsReference(r)
 	}
 
+	r.Notes(e.entity.Notes)
+
 	r.End()
 }
 

@@ -36,6 +36,14 @@ var Command = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 }
 
+var (
+	describeNotes = false
+)
+
+func init() {
+	Command.Flags().BoolVarP(&describeNotes, "notes", "n", describeNotes, "Include notes in each entity's description")
+}
+
 type Entity[T any] struct {
 	archive Archive
 	id      string
@@ -58,7 +66,7 @@ func describe(c *cobra.Command, args []string) error {
 	}
 
 	archive := Archive{glxfile}
-	r := Report{os.Stdout}
+	r := Report{w: os.Stdout, IncludeNotes: describeNotes}
 
 	var unknowns []string
 

@@ -26,6 +26,8 @@ func (a *Assertion) Describe(r Report) {
 		s.DescribeAsSection(r)
 	}
 
+	r.Notes(a.entity.Notes)
+
 	r.End()
 }
 
