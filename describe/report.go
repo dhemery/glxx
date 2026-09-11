@@ -11,6 +11,10 @@ type Report struct {
 	w io.Writer
 }
 
+func NewReport(w io.Writer) Report {
+	return Report{w: w}
+}
+
 func (r Report) Begin(label, id string) {
 	fmt.Fprintf(r.w, "=== %s: %s ===\n", label, id)
 	fmt.Fprintln(r.w)

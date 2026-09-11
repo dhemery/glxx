@@ -7,6 +7,7 @@ import (
 
 	"github.com/dhemery/glxx/describe"
 	"github.com/dhemery/glxx/dump"
+	"github.com/dhemery/glxx/refs"
 	"github.com/spf13/cobra"
 )
 
@@ -32,6 +33,7 @@ func init() {
 
 	glxxCmd.AddCommand(describe.Command)
 	glxxCmd.AddCommand(dump.Command)
+	glxxCmd.AddCommand(refs.Command)
 }
 
 // Execute runs the glxx command.
