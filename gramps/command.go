@@ -2,7 +2,6 @@
 package gramps
 
 import (
-	"errors"
 	"os"
 
 	"github.com/dhemery/glxx/dump"
@@ -10,46 +9,35 @@ import (
 )
 
 var (
-	grampsImport = false
-	grampsDump   = true
-	grampsCheck  = false
+	importDump = false
 )
 
-var ErrHasUnknown = errors.New("has unknown fields or attrs")
-
 func init() {
-	Command.Flags().BoolVar(&grampsCheck, "check", grampsCheck, "Check for unknown fields and attributes in Gramps XML")
-	Command.Flags().BoolVar(&grampsDump, "dump", grampsDump, "Dump Gramps XML to JSON")
-	Command.Flags().BoolVar(&grampsImport, "import", grampsImport, "Import Gramps XML into GLX family archive")
+	Command.Flags().BoolVar(&importDump, "dump", importDump, "Dump loaded Gramps XML to JSON and exit")
 }
 
 var Command = &cobra.Command{
-	Use:   "gramps [flags] file",
-	Short: "Import a Gramps XML file or write as JSON",
+	Use:   "import [flags] file",
+	Short: "Import a Gramps XML file",
 	Args:  cobra.ExactArgs(1),
-	RunE:  runGramps,
+	RunE:  run,
 }
 
-func runGramps(c *cobra.Command, args []string) error {
-	if !(grampsImport || grampsDump) {
-		c.Usage()
-		return nil
-	}
-
-	raw, err := Read(args[0])
+func run(c *cobra.Command, args []string) error {
+	raw, err := loadGrampsXML(args[0])
 	if err != nil {
 		return err
 	}
 
+	if importDump {
+		return dump.WriteJSON(os.Stdout, raw)
+	}
+
 	db := newDB(raw)
-
-	if grampsDump {
-		dump.WriteJSON(os.Stdout, db)
+	converted, err := importGramps(db)
+	if err != nil {
+		return err
 	}
 
-	if grampsImport {
-		return errors.ErrUnsupported
-	}
-
-	return nil
+	return dump.WriteJSON(os.Stdout, converted)
 }

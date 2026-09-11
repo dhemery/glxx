@@ -94,7 +94,7 @@ type Citation struct {
 	Attributes []Attribute `xml:"srcattribute"`
 	Media      []MediaRef  `xml:"objref"`
 	Notes      []NoteRef   `xml:"noteref"`
-	Sources    []SourceRef `xml:"sourceref"`
+	Sources    SourceRef   `xml:"sourceref"`
 }
 
 type Event struct {

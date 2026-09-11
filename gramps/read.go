@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func Read(fname string) (*rawGramps, error) {
+func loadGrampsXML(fname string) (*rawGramps, error) {
 	grampsFile, err := os.Open(fname)
 	if err != nil {
 		return nil, err
