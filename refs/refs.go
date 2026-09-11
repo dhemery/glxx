@@ -22,11 +22,13 @@ var Command = &cobra.Command{
 var (
 	refsCount = false
 	refsList  = false
+	refsSort  = false
 )
 
 func init() {
 	Command.Flags().BoolVarP(&refsCount, "count", "c", refsCount, "Count referrers instead of describing")
 	Command.Flags().BoolVarP(&refsList, "list", "l", refsList, "List referrer IDs instead of describing")
+	Command.Flags().BoolVarP(&refsSort, "sort", "s", refsSort, "Sort referrers by ID")
 }
 
 func runRefs(c *cobra.Command, args []string) error {
@@ -49,7 +51,9 @@ func runRefs(c *cobra.Command, args []string) error {
 		return nil
 	}
 
-	slices.Sort(referrerIDs)
+	if refsSort {
+		slices.Sort(referrerIDs)
+	}
 
 	if refsList {
 		for _, referrerID := range referrerIDs {
@@ -75,6 +79,48 @@ func referrersTo(id string, f *glx.GLXFile) []string {
 
 	for referrerID, referrer := range f.Assertions {
 		if assertionRefersTo(referrer, id) {
+			out = append(out, referrerID)
+		}
+	}
+
+	for referrerID, referrer := range f.Citations {
+		if citationRefersTo(referrer, id) {
+			out = append(out, referrerID)
+		}
+	}
+
+	for referrerID, referrer := range f.Events {
+		if eventRefersTo(referrer, id) {
+			out = append(out, referrerID)
+		}
+	}
+
+	for referrerID, referrer := range f.Media {
+		if mediaRefersTo(referrer, id) {
+			out = append(out, referrerID)
+		}
+	}
+
+	for referrerID, referrer := range f.Persons {
+		if personRefersTo(referrer, id) {
+			out = append(out, referrerID)
+		}
+	}
+
+	for referrerID, referrer := range f.Places {
+		if placeRefersTo(referrer, id) {
+			out = append(out, referrerID)
+		}
+	}
+
+	for referrerID, referrer := range f.Relationships {
+		if relationshipRefersTo(referrer, id) {
+			out = append(out, referrerID)
+		}
+	}
+
+	for referrerID, referrer := range f.Sources {
+		if sourceRefersTo(referrer, id) {
 			out = append(out, referrerID)
 		}
 	}
@@ -106,10 +152,59 @@ func assertionRefersTo(a *glx.Assertion, id string) bool {
 	return false
 }
 
-func citationRefersTo(c *glx.Citation, id string) bool         { return false }
-func eventRefersTo(e *glx.Event, id string) bool               { return false }
-func mediaRefersTo(m *glx.Media, id string) bool               { return false }
-func personRefersTo(p *glx.Person, id string) bool             { return false }
-func placeRefersTo(p *glx.Place, id string) bool               { return false }
-func relatiohshipRefersTo(r *glx.Relationship, id string) bool { return false }
-func sourceRefersTo(s *glx.Source, id string) bool             { return false }
+func citationRefersTo(c *glx.Citation, id string) bool {
+	if slices.Contains(c.Media, id) {
+		return true
+	}
+	if c.RepositoryID == id {
+		return true
+	}
+	if c.SourceID == id {
+		return true
+	}
+	return false
+}
+
+func eventRefersTo(e *glx.Event, id string) bool {
+	for _, p := range e.Participants {
+		if p.Person == id {
+			return true
+		}
+	}
+	if e.PlaceID == id {
+		return true
+	}
+	return false
+}
+
+func mediaRefersTo(m *glx.Media, id string) bool {
+	return m.Source == id
+}
+
+func personRefersTo(p *glx.Person, id string) bool { return false }
+
+func placeRefersTo(p *glx.Place, id string) bool {
+	return p.ParentID == id
+}
+
+func relationshipRefersTo(r *glx.Relationship, id string) bool {
+	if r.StartEvent == id || r.EndEvent == id {
+		return true
+	}
+	for _, p := range r.Participants {
+		if p.Person == id {
+			return true
+		}
+	}
+	return false
+}
+
+func sourceRefersTo(s *glx.Source, id string) bool {
+	if slices.Contains(s.Media, id) {
+		return true
+	}
+	if s.RepositoryID == id {
+		return true
+	}
+	return false
+}
