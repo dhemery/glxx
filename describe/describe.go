@@ -11,19 +11,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var describeLongUsage = `Describe an entity.
+var describeLongUsage = `Describe GLX entities.
 
-glxx describe describes one or more GLX entities. You can specify the
-entities either by ID or by file path. Specifying the ID works in
-single-file and multi-file archives. Specifying the file path works
-only in multi-file archives where each entity's ID is used as its
-file name.
+glxx describe describes one or more GLX entities.
+
+You can specify entities either by ID or by file path.
+
+NOTE: If you use a file path to specify an entity, glxx does not read
+the file directly. Instead it removes the directory and extension
+elements from the path and treats what remains as the entity ID. In
+multi-file archives this allows you to use shell features and
+commands to specify entities.
+
+For example, to describe all assertions:
+
+	glxx describe assertions/*.glx
 `
 
 var Command = &cobra.Command{
 	Use:   "describe [flags] entity...",
-	Short: "Describe an entity",
-	Long:  "Describe an entity",
+	Short: "Describe GLX entities",
+	Long:  describeLongUsage,
 	RunE:  describe,
 	Args:  cobra.MinimumNArgs(1),
 }
