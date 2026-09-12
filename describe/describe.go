@@ -37,17 +37,20 @@ var Command = &cobra.Command{
 }
 
 var (
-	describeNotes = false
+	describeNotes      = false
+	describeProperties = false
 )
 
 func init() {
-	Command.Flags().BoolVarP(&describeNotes, "notes", "n", describeNotes, "Include notes in each entity's description")
+	Command.Flags().BoolVarP(&describeNotes, "notes", "n", describeNotes, "Include notes")
+	Command.Flags().BoolVarP(&describeProperties, "properties", "p", describeProperties, "Include all properties")
 }
 
 type Entity[T any] struct {
-	archive Archive
-	id      string
-	entity  *T
+	archive    Archive
+	id         string
+	entity     *T
+	properties Properties
 }
 
 type Describer interface {
@@ -66,7 +69,11 @@ func describe(c *cobra.Command, args []string) error {
 	}
 
 	archive := Archive{glxfile}
-	r := Report{w: os.Stdout, IncludeNotes: describeNotes}
+	r := Report{
+		w:                    os.Stdout,
+		IncludeNotes:         describeNotes,
+		IncludeAllProperties: describeProperties,
+	}
 
 	var unknowns []string
 

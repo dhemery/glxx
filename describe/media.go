@@ -16,6 +16,8 @@ func (m *Media) Describe(r Report) {
 	r.Item("Hash", m.entity.Hash)
 	r.Item("Date", m.entity.Date.String())
 
+	m.properties.Describe(r)
+
 	m.Source().DescribeAsReference(r)
 
 	r.Notes(m.entity.Notes)

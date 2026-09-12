@@ -13,6 +13,8 @@ func (p *Person) Describe(r Report) {
 
 	r.Item("Name", p.Name())
 
+	p.properties.Describe(r)
+
 	r.Notes(p.entity.Notes)
 
 	r.End()

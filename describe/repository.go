@@ -18,6 +18,8 @@ func (r *Repository) Describe(rpt Report) {
 	rpt.Item("Country", r.entity.Country)
 	rpt.Item("Website", r.entity.Website)
 
+	r.properties.Describe(rpt)
+
 	rpt.Notes(r.entity.Notes)
 
 	rpt.End()

@@ -16,6 +16,8 @@ func (c *Citation) Describe(r Report) {
 		m.DescribeAsReference(r)
 	}
 
+	c.properties.Describe(r)
+
 	r.Notes(c.entity.Notes)
 
 	r.End()

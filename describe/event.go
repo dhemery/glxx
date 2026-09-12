@@ -16,6 +16,8 @@ func (e *Event) Describe(r Report) {
 	e.Place().DescribeAsReference(r, "Place")
 	r.Item("Date", e.entity.Date.String())
 
+	e.properties.Describe(r)
+
 	r.BeginSection("Participants")
 	for _, p := range e.Participants() {
 		p.DescribeAsReference(r)

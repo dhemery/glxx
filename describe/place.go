@@ -17,6 +17,8 @@ func (p *Place) Describe(r Report) {
 	r.Item("Latitude", angle(p.entity.Latitude))
 	r.Item("Longitude", angle(p.entity.Longitude))
 
+	p.properties.Describe(r)
+
 	r.Notes(p.entity.Notes)
 
 	r.End()

@@ -40,14 +40,15 @@ func (a Archive) Find(id string) Describer {
 func (a Archive) Assertion(id string) *Assertion {
 	entity := a.File.Assertions[id]
 	if entity != nil {
-		return &Assertion{a, id, entity}
+		return &Assertion{a, id, entity, Properties{}}
 	}
 	return nil
 }
 
 func (a Archive) Citation(id string) *Citation {
 	if entity, ok := a.File.Citations[id]; ok {
-		return &Citation{a, id, entity}
+		props := NewProperties(entity.Properties, a.File.CitationProperties)
+		return &Citation{a, id, entity, props}
 	}
 	return nil
 }
@@ -62,14 +63,16 @@ func (a Archive) Citations(ids []string) []*Citation {
 
 func (a Archive) Event(id string) *Event {
 	if entity, ok := a.File.Events[id]; ok {
-		return &Event{a, id, entity}
+		props := NewProperties(entity.Properties, a.File.EventProperties)
+		return &Event{a, id, entity, props}
 	}
 	return nil
 }
 
 func (a Archive) Media(id string) *Media {
 	if entity, ok := a.File.Media[id]; ok {
-		return &Media{a, id, entity}
+		props := NewProperties(entity.Properties, a.File.MediaProperties)
+		return &Media{a, id, entity, props}
 	}
 	return nil
 }
@@ -97,35 +100,40 @@ func (a Archive) Participants(pp []glx.Participant) []*Participant {
 
 func (a Archive) Person(id string) *Person {
 	if entity, ok := a.File.Persons[id]; ok {
-		return &Person{a, id, entity}
+		props := NewProperties(entity.Properties, a.File.PersonProperties)
+		return &Person{a, id, entity, props}
 	}
 	return nil
 }
 
 func (a Archive) Place(id string) *Place {
 	if entity, ok := a.File.Places[id]; ok {
-		return &Place{a, id, entity}
+		props := NewProperties(entity.Properties, a.File.PlaceProperties)
+		return &Place{a, id, entity, props}
 	}
 	return nil
 }
 
 func (a Archive) Relationship(id string) *Relationship {
 	if entity, ok := a.File.Relationships[id]; ok {
-		return &Relationship{a, id, entity}
+		props := NewProperties(entity.Properties, a.File.RelationshipProperties)
+		return &Relationship{a, id, entity, props}
 	}
 	return nil
 }
 
 func (a Archive) Repository(id string) *Repository {
 	if entity, ok := a.File.Repositories[id]; ok {
-		return &Repository{a, id, entity}
+		props := NewProperties(entity.Properties, a.File.RepositoryProperties)
+		return &Repository{a, id, entity, props}
 	}
 	return nil
 }
 
 func (a Archive) Source(id string) *Source {
 	if entity, ok := a.File.Sources[id]; ok {
-		return &Source{a, id, entity}
+		props := NewProperties(entity.Properties, a.File.SourceProperties)
+		return &Source{a, id, entity, props}
 	}
 	return nil
 }

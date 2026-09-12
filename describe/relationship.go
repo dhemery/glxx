@@ -17,6 +17,8 @@ func (r *Relationship) Describe(rpt Report) {
 		p.DescribeAsReference(rpt)
 	}
 
+	r.properties.Describe(rpt)
+
 	r.StartEvent().DescribeAsSection(rpt, "Start Event")
 	r.EndEvent().DescribeAsSection(rpt, "End Event")
 

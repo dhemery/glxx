@@ -16,6 +16,8 @@ func (s *Source) Describe(r Report) {
 	r.Item("Date", s.entity.Date.String())
 	r.Item("Language", s.entity.Language)
 
+	s.properties.Describe(r)
+
 	s.Repository().DescribeAsReference(r)
 
 	for _, m := range s.Media() {

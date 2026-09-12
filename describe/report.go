@@ -8,8 +8,9 @@ import (
 )
 
 type Report struct {
-	w            io.Writer
-	IncludeNotes bool
+	w                    io.Writer
+	IncludeNotes         bool
+	IncludeAllProperties bool
 }
 
 func NewReport(w io.Writer) Report {
@@ -34,13 +35,17 @@ func (r Report) End() {
 	fmt.Fprintln(r.w)
 }
 
+func (r Report) Line(line ...any) {
+	fmt.Fprintln(r.w, line...)
+}
+
 func (r Report) Item(label, value string) {
 	const unspecifiedValue = "—"
 
 	if value == "" {
 		value = unspecifiedValue
 	}
-	fmt.Fprintf(r.w, "  %-18s%s\n", label+":", value)
+	fmt.Fprintf(r.w, "  %-18s%s\n", label[:min(len(label), 16)]+":", value)
 }
 
 func (r Report) Notes(nn []string) {
