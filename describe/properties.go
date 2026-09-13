@@ -156,7 +156,11 @@ func NewObjectPropertyValue(object map[string]any, def *glx.PropertyDefinition, 
 	if fields, ok := object["fields"].(map[string]any); ok {
 		fdefs := def.Fields
 		for fname, fval := range fields {
-			flabel := fdefs[fname].Label
+			flabel := fname
+			fdef, ok := fdefs[fname]
+			if ok {
+				flabel = fdef.Label
+			}
 			out.Fields[flabel] = fmt.Sprint(fval)
 		}
 
