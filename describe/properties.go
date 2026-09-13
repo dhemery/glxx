@@ -88,16 +88,18 @@ func (v PropertyReferenceValue) Describe(label string, r Report) {
 
 type PropertyErrorValue struct {
 	Description string
-	Value       string
+	Definition  *glx.PropertyDefinition
+	Value       any
 }
 
 func (v PropertyErrorValue) String() string {
-	return v.Description
+	return "ERROR: " + v.Description
 }
 
 func (v PropertyErrorValue) Describe(label string, r Report) {
 	r.Item(label, v.String())
-	r.Item("  value", v.Value)
+	r.Item("  value", fmt.Sprintf("%#v", v.Value))
+	r.Item("  definition", fmt.Sprintf("%v", v.Definition))
 
 }
 
@@ -112,39 +114,44 @@ func NewProperties(vals map[string]any, defs map[string]*glx.PropertyDefinition,
 
 }
 
-func NewPropertyValue(value any, def *glx.PropertyDefinition, archive Archive) PropertyValue {
+func NewPropertyValue(val any, def *glx.PropertyDefinition, archive Archive) PropertyValue {
 	if isMultiValueProperty(def) {
-		return NewMultiValueProperty(asArray(value), def, archive)
+		return NewMultiValueProperty(asArray(val), def, archive)
 	}
 
-	return NewSingleValueProperty(value, def, archive)
+	return NewSingleValuedProperty(val, def, archive)
 }
 
 func NewMultiValueProperty(vals []any, def *glx.PropertyDefinition, archive Archive) PropertyMultiValue {
 	var out PropertyMultiValue
 
 	for _, val := range vals {
-		out = append(out, NewSingleValueProperty(val, def, archive))
+		out = append(out, NewSingleValuedProperty(val, def, archive))
 	}
 
 	return out
 }
 
-func NewSingleValueProperty(v any, def *glx.PropertyDefinition, archive Archive) PropertyValue {
+func NewSingleValuedProperty(val any, def *glx.PropertyDefinition, archive Archive) PropertyValue {
 	if isObjectProperty(def) {
-		return NewObjectPropertyValue(asObject(v), def, archive)
+		return NewObjectPropertyValue(asObject(val), def, archive)
 	}
 
-	return NewStringPropertyValue(v, def, archive)
+	return NewStringPropertyValue(fmt.Sprint(val), def, archive)
 
 }
 
 func NewObjectPropertyValue(object map[string]any, def *glx.PropertyDefinition, archive Archive) PropertyObjectValue {
 	var out PropertyObjectValue
-	out.Value = NewStringPropertyValue(object["value"], def, archive)
+
+	if val, ok := object["value"]; ok {
+		out.Value = NewStringPropertyValue(fmt.Sprint(val), def, archive)
+	}
+
 	if date, ok := object["date"]; ok {
 		out.Date = fmt.Sprint(date)
 	}
+
 	out.Fields = make(map[string]string)
 	if fields, ok := object["fields"].(map[string]any); ok {
 		fdefs := def.Fields
@@ -157,8 +164,7 @@ func NewObjectPropertyValue(object map[string]any, def *glx.PropertyDefinition, 
 	return out
 }
 
-// NewStringPropertyValue constructs a PropertyValue assuming that value is neither an array nor a map.
-func NewStringPropertyValue(value any, def *glx.PropertyDefinition, archive Archive) PropertyValue {
+func NewStringPropertyValue(value string, def *glx.PropertyDefinition, archive Archive) PropertyValue {
 	switch {
 	case def.ReferenceType != "":
 		return NewPropertyReferenceValue(value, def, archive)
@@ -170,7 +176,11 @@ func NewStringPropertyValue(value any, def *glx.PropertyDefinition, archive Arch
 		return NewPropertyVocabularyValue(value, def, archive)
 
 	default:
-		return NewPropertyUnknownValue(value, def)
+		return PropertyErrorValue{
+			Description: "Not reference, value, or vocabulary type",
+			Definition:  def,
+			Value:       value,
+		}
 	}
 }
 
@@ -189,40 +199,45 @@ func isTemporalProperty(definition *glx.PropertyDefinition) bool {
 	return definition.Temporal != nil && *definition.Temporal
 }
 
-func asObject(value any) map[string]any {
-	if m, ok := value.(map[string]any); ok {
+func asObject(val any) map[string]any {
+	if m, ok := val.(map[string]any); ok {
 		return m
 	}
 	return map[string]any{
-		"value": value,
+		"value": val,
 	}
 }
 
-func asArray(value any) []any {
-	if v, ok := value.([]any); ok {
+func asArray(val any) []any {
+	if v, ok := val.([]any); ok {
 		return v
 	}
-	return []any{value}
+	return []any{val}
 
 }
 
-func NewPropertyReferenceValue(value any, definition *glx.PropertyDefinition, archive Archive) PropertyReferenceValue {
-	var out PropertyReferenceValue
+func NewPropertyReferenceValue(val any, def *glx.PropertyDefinition, archive Archive) PropertyValue {
+	id := fmt.Sprint(val)
 
-	id := fmt.Sprint(value)
+	out := PropertyReferenceValue{ID: id}
 
-	switch definition.ReferenceType {
+	switch def.ReferenceType {
 	case "persons":
 		if person := archive.Person(id); person != nil {
 			out.DisplayName = person.Name()
 		}
+
 	case "places":
 		if place := archive.Place(id); place != nil {
 			out.DisplayName = place.Name()
 		}
 
 	default:
-		panic("NewPropertyReferenceValue" + definition.Label + " unimplemented reference type " + definition.ReferenceType)
+		return PropertyErrorValue{
+			Description: "Unimplemented reference type",
+			Definition:  def,
+			Value:       val,
+		}
 	}
 
 	return out
@@ -232,14 +247,6 @@ func NewStringValue(v any) StringValue {
 	return StringValue(fmt.Sprint(v))
 }
 
-func NewPropertyVocabularyValue(v any, definition *glx.PropertyDefinition, archive Archive) PropertyValue {
-	return NewStringValue(v)
-}
-
-func NewPropertyUnknownValue(value any, definition *glx.PropertyDefinition) PropertyErrorValue {
-	return PropertyErrorValue{
-		Description: "UNKNOWN " + definition.Label,
-		Value:       fmt.Sprintf("%#v", value),
-	}
-
+func NewPropertyVocabularyValue(val any, def *glx.PropertyDefinition, archive Archive) PropertyValue {
+	return NewStringValue(val)
 }
