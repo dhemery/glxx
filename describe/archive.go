@@ -47,7 +47,7 @@ func (a Archive) Assertion(id string) *Assertion {
 
 func (a Archive) Citation(id string) *Citation {
 	if entity, ok := a.File.Citations[id]; ok {
-		props := NewProperties(entity.Properties, a.File.CitationProperties)
+		props := NewProperties(entity.Properties, a.File.CitationProperties, a)
 		return &Citation{a, id, entity, props}
 	}
 	return nil
@@ -63,7 +63,7 @@ func (a Archive) Citations(ids []string) []*Citation {
 
 func (a Archive) Event(id string) *Event {
 	if entity, ok := a.File.Events[id]; ok {
-		props := NewProperties(entity.Properties, a.File.EventProperties)
+		props := NewProperties(entity.Properties, a.File.EventProperties, a)
 		return &Event{a, id, entity, props}
 	}
 	return nil
@@ -71,7 +71,7 @@ func (a Archive) Event(id string) *Event {
 
 func (a Archive) Media(id string) *Media {
 	if entity, ok := a.File.Media[id]; ok {
-		props := NewProperties(entity.Properties, a.File.MediaProperties)
+		props := NewProperties(entity.Properties, a.File.MediaProperties, a)
 		return &Media{a, id, entity, props}
 	}
 	return nil
@@ -100,7 +100,7 @@ func (a Archive) Participants(pp []glx.Participant) []*Participant {
 
 func (a Archive) Person(id string) *Person {
 	if entity, ok := a.File.Persons[id]; ok {
-		props := NewProperties(entity.Properties, a.File.PersonProperties)
+		props := NewProperties(entity.Properties, a.File.PersonProperties, a)
 		return &Person{a, id, entity, props}
 	}
 	return nil
@@ -108,7 +108,7 @@ func (a Archive) Person(id string) *Person {
 
 func (a Archive) Place(id string) *Place {
 	if entity, ok := a.File.Places[id]; ok {
-		props := NewProperties(entity.Properties, a.File.PlaceProperties)
+		props := NewProperties(entity.Properties, a.File.PlaceProperties, a)
 		return &Place{a, id, entity, props}
 	}
 	return nil
@@ -116,7 +116,7 @@ func (a Archive) Place(id string) *Place {
 
 func (a Archive) Relationship(id string) *Relationship {
 	if entity, ok := a.File.Relationships[id]; ok {
-		props := NewProperties(entity.Properties, a.File.RelationshipProperties)
+		props := NewProperties(entity.Properties, a.File.RelationshipProperties, a)
 		return &Relationship{a, id, entity, props}
 	}
 	return nil
@@ -124,7 +124,7 @@ func (a Archive) Relationship(id string) *Relationship {
 
 func (a Archive) Repository(id string) *Repository {
 	if entity, ok := a.File.Repositories[id]; ok {
-		props := NewProperties(entity.Properties, a.File.RepositoryProperties)
+		props := NewProperties(entity.Properties, a.File.RepositoryProperties, a)
 		return &Repository{a, id, entity, props}
 	}
 	return nil
@@ -132,7 +132,7 @@ func (a Archive) Repository(id string) *Repository {
 
 func (a Archive) Source(id string) *Source {
 	if entity, ok := a.File.Sources[id]; ok {
-		props := NewProperties(entity.Properties, a.File.SourceProperties)
+		props := NewProperties(entity.Properties, a.File.SourceProperties, a)
 		return &Source{a, id, entity, props}
 	}
 	return nil
