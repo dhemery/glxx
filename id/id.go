@@ -2,6 +2,7 @@
 package id
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -20,14 +21,24 @@ var Command = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 }
 
-type result struct {
-	arg           string
-	id            string
-	recommendedID string
-	err           error
+var (
+	showFixes   = false
+	showMatches = false
+	showUnables = false
+)
+
+func init() {
+	Command.Flags().BoolVarP(&showFixes, "fixes", "f", showFixes, "Show glx command to fix each mismatching ID")
+	Command.Flags().BoolVarP(&showMatches, "matches", "m", showMatches, "Show each already matching ID")
+	Command.Flags().BoolVarP(&showUnables, "unable", "u", showUnables, "Show reason if unable to recommend")
 }
 
 func id(c *cobra.Command, args []string) error {
+	if !(showFixes || showMatches || showUnables) {
+		showFixes = true
+		showMatches = true
+		showUnables = true
+	}
 	archivePath, err := c.Flags().GetString("archive")
 	if err != nil {
 		return err
@@ -43,7 +54,6 @@ func id(c *cobra.Command, args []string) error {
 
 		entity := findEntity(id, glxFile)
 		if entity == nil {
-
 			if id != arg {
 				return fmt.Errorf("unknown entity %s (%s)", id, arg)
 			}
@@ -52,16 +62,22 @@ func id(c *cobra.Command, args []string) error {
 
 		recommendedID, err := recommendID(entity)
 		if err != nil {
-			return fmt.Errorf("id %s: %w", id, err)
+			if showUnables {
+				fmt.Fprintf(os.Stdout, "id %s: %s\n", id, err)
+			}
+			continue
 		}
 
 		if id == recommendedID {
-			fmt.Fprintln(os.Stdout, "good ID:", id)
-		} else {
-			fmt.Fprintln(os.Stdout, " bad ID:", recommendedID)
-			fmt.Fprintln(os.Stdout, "    fix:", "glx", "rename", id, recommendedID)
+			if showMatches {
+				fmt.Fprintln(os.Stdout, "ok:", id)
+			}
+			continue
 		}
-		fmt.Fprintln(os.Stdout)
+
+		if showFixes {
+			fmt.Fprintln(os.Stdout, "glx rename", id, recommendedID)
+		}
 	}
 
 	return nil
@@ -104,20 +120,12 @@ func recommendID(entity any) (string, error) {
 	case *glx.Event:
 		return recommendEventID(v)
 
+	case *glx.Person:
+		return recommendPersonID(v)
+
 	default:
 		return "", fmt.Errorf("type %T not implemented", v)
 	}
-}
-
-var relationshipEventPrimaryRoles = []string{
-	"bride",
-	"groom",
-	"spouse",
-}
-
-var personEventPrincipalRoles = []string{
-	"principal",
-	"subject",
 }
 
 func recommendEventID(event *glx.Event) (string, error) {
@@ -136,24 +144,42 @@ func recommendEventID(event *glx.Event) (string, error) {
 		return "", fmt.Errorf("event has both principals and relationship participants: %s", participants)
 	}
 
+	var parts []string
+
 	if isPersonEvent {
 		if len(principalParticipants) != 1 {
 			return "", fmt.Errorf("event has %d principals: %s",
 				len(principalParticipants), principalParticipants)
 		}
-		participantID := strings.TrimPrefix(principalParticipants[0].Person, glx.EntityIDPrefixPerson)
-		recommendedID := glx.EntityIDPrefixEvent + participantID + "-" + event.Type
-		return recommendedID, nil
+		parts = append(parts, strings.TrimPrefix(principalParticipants[0].Person, glx.EntityIDPrefixPerson))
 	}
 
-	if len(relationshipParticipants) != 2 {
-		return "", fmt.Errorf("event has %d relationship participants: %s",
-			len(relationshipParticipants), relationshipParticipants)
+	if isRelationshipEvent {
+		if len(relationshipParticipants) != 2 {
+			return "", fmt.Errorf("event has %d relationship participants: %s",
+				len(relationshipParticipants), relationshipParticipants)
+		}
+		parts = append(parts, strings.TrimPrefix(relationshipParticipants[0].Person, glx.EntityIDPrefixPerson))
+		parts = append(parts, strings.TrimPrefix(relationshipParticipants[1].Person, glx.EntityIDPrefixPerson))
 	}
-	participant1ID := strings.TrimPrefix(relationshipParticipants[0].Person, glx.EntityIDPrefixPerson)
-	participant2ID := strings.TrimPrefix(relationshipParticipants[1].Person, glx.EntityIDPrefixPerson)
-	recommendedID := glx.EntityIDPrefixEvent + participant1ID + "-" + participant2ID + "-" + event.Type
+
+	parts = append(parts, event.Type)
+	recommendedID := glx.EntityID(glx.EntityIDPrefixEvent, strings.Join(parts, "-"))
+
 	return recommendedID, nil
+}
+
+func recommendPersonID(person *glx.Person) (string, error) {
+	nameProp := person.Properties["name"]
+	given, surname := glx.ExtractNameFields(nameProp)
+
+	if given == "" || given == "—" || surname == "" || surname == "—" {
+		return "", errors.New("no recommendation: person has empty given name or surname")
+	}
+
+	given, _, _ = strings.Cut(given, " ")
+
+	return glx.EntityID(glx.EntityIDPrefixPerson, given+"-"+surname), nil
 }
 
 func categorizeEventParticipants(pp []glx.Participant) ([]glx.Participant, []glx.Participant) {
@@ -169,4 +195,15 @@ func categorizeEventParticipants(pp []glx.Participant) ([]glx.Participant, []glx
 		}
 	}
 	return primaryParticipants, relationshipParticipants
+}
+
+var relationshipEventPrimaryRoles = []string{
+	"bride",
+	"groom",
+	"spouse",
+}
+
+var personEventPrincipalRoles = []string{
+	"principal",
+	"subject",
 }
