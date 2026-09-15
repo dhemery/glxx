@@ -83,11 +83,24 @@ func id(c *cobra.Command, args []string) error {
 			continue
 		}
 
-		if id == recommendedID {
+		// Accept the current ID if it starts with the recommended ID.
+		// Assume that the suffix was added to differentiate this
+		// entity from others with similar identifying attributes. So
+		// a current ID person-george-washington-1732 would match
+		// the recommended ID person-george-washington. The trailing
+		// "-1732" differentiates this George Washington from others.
+		if strings.HasPrefix(id, recommendedID) {
 			if showMatches {
 				fmt.Fprintln(os.Stdout, "matches recommendation:", id)
 			}
+			continue
+		}
 
+		if findEntity(recommendedID, glxFile) != nil {
+			if showUnables {
+				fmt.Fprintf(os.Stdout, "no recommendation for %s: recommended ID %s already in use\n",
+					id, recommendedID)
+			}
 			continue
 		}
 
