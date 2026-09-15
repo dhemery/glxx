@@ -63,7 +63,7 @@ func id(c *cobra.Command, args []string) error {
 		recommendedID, err := recommendID(entity)
 		if err != nil {
 			if showUnables {
-				fmt.Fprintf(os.Stdout, "id %s: %s\n", id, err)
+				fmt.Fprintf(os.Stdout, "id %s: %s\n", id, fmt.Errorf("no recommendation: %w", err))
 			}
 			continue
 		}
@@ -127,11 +127,15 @@ func recommendID(entity any) (string, error) {
 		return recommendRelationshipID(v)
 
 	default:
-		return "", fmt.Errorf("type %T not implemented", v)
+		return "", fmt.Errorf("entity type %T", v)
 	}
 }
 
 func recommendEventID(event *glx.Event) (string, error) {
+	if !slices.Contains(knownEventTypes, event.Type) {
+		return "", fmt.Errorf("event type %s", event.Type)
+	}
+
 	participants := event.Participants
 
 	principalParticipants, relationshipParticipants := categorizeEventParticipants(participants)
@@ -139,12 +143,14 @@ func recommendEventID(event *glx.Event) (string, error) {
 	isPersonEvent := len(principalParticipants) > 0
 	isRelationshipEvent := len(relationshipParticipants) > 0
 
-	if !isPersonEvent && !isRelationshipEvent {
-		return "", fmt.Errorf("event has neither principals nor relationship participants: %s", participants)
+	if isPersonEvent && isRelationshipEvent {
+		return "", fmt.Errorf("event has participants with both principal and relationship roles: %s",
+			participants)
 	}
 
-	if isPersonEvent && isRelationshipEvent {
-		return "", fmt.Errorf("event has both principals and relationship participants: %s", participants)
+	if !isPersonEvent && !isRelationshipEvent {
+		return "", fmt.Errorf("event has no participants with principal or relationship roles: %s",
+			participants)
 	}
 
 	var parts []string
@@ -166,11 +172,25 @@ func recommendEventID(event *glx.Event) (string, error) {
 		parts = append(parts, strings.TrimPrefix(relationshipParticipants[1].Person, glx.EntityIDPrefixPerson))
 	}
 
+	parts = append(parts, event.Type)
 	return composeID(glx.EntityIDPrefixEvent, parts...), nil
 }
 
-func composeID(prefix string, parts ...string) string {
-	return prefix + strings.Join(parts, "-")
+var knownEventTypes = []string{
+	"birth",
+	"death",
+	"marriage",
+}
+
+var relationshipEventPrimaryRoles = []string{
+	"bride",
+	"groom",
+	"spouse",
+}
+
+var personEventPrincipalRoles = []string{
+	"principal",
+	"subject",
 }
 
 func recommendPersonID(person *glx.Person) (string, error) {
@@ -178,7 +198,7 @@ func recommendPersonID(person *glx.Person) (string, error) {
 	given, surname := glx.ExtractNameFields(nameProp)
 
 	if given == "" || given == "—" || surname == "" || surname == "—" {
-		return "", errors.New("no recommendation: person has empty given name or surname")
+		return "", errors.New("person has empty given name or surname")
 	}
 
 	given, _, _ = strings.Cut(given, " ")
@@ -206,7 +226,7 @@ func recommendRelationshipID(r *glx.Relationship) (string, error) {
 		return composeID(glx.EntityIDPrefixRelationship, s1, s2), nil
 	}
 
-	return "", fmt.Errorf("unable to compose ID from participants with roles: %s", r.Participants)
+	return "", fmt.Errorf("relationship has participants with roles: %s", r.Participants)
 }
 
 func categorizeEventParticipants(pp []glx.Participant) ([]glx.Participant, []glx.Participant) {
@@ -234,13 +254,6 @@ func participantsByRole(pp []glx.Participant) map[string][]glx.Participant {
 	return out
 }
 
-var relationshipEventPrimaryRoles = []string{
-	"bride",
-	"groom",
-	"spouse",
-}
-
-var personEventPrincipalRoles = []string{
-	"principal",
-	"subject",
+func composeID(prefix string, parts ...string) string {
+	return prefix + strings.Join(parts, "-")
 }
