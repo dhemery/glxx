@@ -123,6 +123,9 @@ func recommendID(entity any) (string, error) {
 	case *glx.Person:
 		return recommendPersonID(v)
 
+	case *glx.Relationship:
+		return recommendRelationshipID(v)
+
 	default:
 		return "", fmt.Errorf("type %T not implemented", v)
 	}
@@ -163,10 +166,11 @@ func recommendEventID(event *glx.Event) (string, error) {
 		parts = append(parts, strings.TrimPrefix(relationshipParticipants[1].Person, glx.EntityIDPrefixPerson))
 	}
 
-	parts = append(parts, event.Type)
-	recommendedID := glx.EntityID(glx.EntityIDPrefixEvent, strings.Join(parts, "-"))
+	return composeID(glx.EntityIDPrefixEvent, parts...), nil
+}
 
-	return recommendedID, nil
+func composeID(prefix string, parts ...string) string {
+	return prefix + strings.Join(parts, "-")
 }
 
 func recommendPersonID(person *glx.Person) (string, error) {
@@ -182,6 +186,29 @@ func recommendPersonID(person *glx.Person) (string, error) {
 	return glx.EntityID(glx.EntityIDPrefixPerson, given+"-"+surname), nil
 }
 
+func recommendRelationshipID(r *glx.Relationship) (string, error) {
+	if len(r.Participants) != 2 {
+		return "", fmt.Errorf("relationship has %d participants", len(r.Participants))
+	}
+
+	byRole := participantsByRole(r.Participants)
+
+	if len(byRole["parent"]) == 1 && len(byRole["child"]) == 1 {
+		parent := strings.TrimPrefix(byRole["parent"][0].Person, glx.EntityIDPrefixPerson)
+		child := strings.TrimPrefix(byRole["child"][0].Person, glx.EntityIDPrefixPerson)
+		return composeID(glx.EntityIDPrefixRelationship, parent, child), nil
+	}
+
+	if len(byRole["spouse"]) == 2 {
+		spouses := byRole["spouse"]
+		s1 := strings.TrimPrefix(spouses[0].Person, glx.EntityIDPrefixPerson)
+		s2 := strings.TrimPrefix(spouses[1].Person, glx.EntityIDPrefixPerson)
+		return composeID(glx.EntityIDPrefixRelationship, s1, s2), nil
+	}
+
+	return "", fmt.Errorf("unable to compose ID from participants with roles: %s", r.Participants)
+}
+
 func categorizeEventParticipants(pp []glx.Participant) ([]glx.Participant, []glx.Participant) {
 	var primaryParticipants []glx.Participant
 	var relationshipParticipants []glx.Participant
@@ -195,6 +222,16 @@ func categorizeEventParticipants(pp []glx.Participant) ([]glx.Participant, []glx
 		}
 	}
 	return primaryParticipants, relationshipParticipants
+}
+
+func participantsByRole(pp []glx.Participant) map[string][]glx.Participant {
+	var out = make(map[string][]glx.Participant)
+
+	for _, p := range pp {
+		out[p.Role] = append(out[p.Role], p)
+	}
+
+	return out
 }
 
 var relationshipEventPrimaryRoles = []string{
