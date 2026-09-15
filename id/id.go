@@ -14,9 +14,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var idUsage = `Recommend entity IDs based on each GLX entity's type and fields.
+
+glxx id applies opinionated rules to recommend IDs for GLX entities.
+There are three possible results:
+- If the ID matches the recommendation, indicate that.
+- If the ID does not match the recommendation, show a 'glx rename'
+  command to fix the ID.
+- If glxx id has no recommendation, explain why.
+
+By default glxx id shows all results. If any of the filter flags
+('--fixes', '--matches', '--unable') are specified, only the selected
+results are displayed.
+`
+
 var Command = &cobra.Command{
 	Use:   "id [flags] entity...",
 	Short: "Show and recommend IDs for GLX entities",
+	Long:  idUsage,
 	RunE:  id,
 	Args:  cobra.MinimumNArgs(1),
 }
@@ -28,9 +43,9 @@ var (
 )
 
 func init() {
-	Command.Flags().BoolVarP(&showFixes, "fixes", "f", showFixes, "Show glx command to fix each mismatching ID")
-	Command.Flags().BoolVarP(&showMatches, "matches", "m", showMatches, "Show each already matching ID")
-	Command.Flags().BoolVarP(&showUnables, "unable", "u", showUnables, "Show reason if unable to recommend")
+	Command.Flags().BoolVarP(&showFixes, "fixes", "f", showFixes, "Show the glx command to fix each mismatching ID")
+	Command.Flags().BoolVarP(&showMatches, "matches", "m", showMatches, "Show each matching ID")
+	Command.Flags().BoolVarP(&showUnables, "unable", "u", showUnables, "Show the reason if unable to recommend")
 }
 
 func id(c *cobra.Command, args []string) error {
@@ -63,15 +78,16 @@ func id(c *cobra.Command, args []string) error {
 		recommendedID, err := recommendID(entity)
 		if err != nil {
 			if showUnables {
-				fmt.Fprintf(os.Stdout, "id %s: %s\n", id, fmt.Errorf("no recommendation: %w", err))
+				fmt.Fprintf(os.Stdout, "no recommendation for %s: %s\n", id, err)
 			}
 			continue
 		}
 
 		if id == recommendedID {
 			if showMatches {
-				fmt.Fprintln(os.Stdout, "ok:", id)
+				fmt.Fprintln(os.Stdout, "matches recommendation:", id)
 			}
+
 			continue
 		}
 
