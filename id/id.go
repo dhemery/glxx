@@ -160,66 +160,15 @@ func recommendID(entity any) (string, error) {
 	}
 }
 
-func recommendEventID(event *glx.Event) (string, error) {
-	if !slices.Contains(knownEventTypes, event.Type) {
-		return "", fmt.Errorf("event type %s", event.Type)
+func recommendEventID(e *glx.Event) (string, error) {
+	summary := summarizeParticipants(e.Participants)
+
+	slug, err := summary.slug(1)
+	if err != nil {
+		return "", fmt.Errorf("event: %w", err)
 	}
 
-	participants := event.Participants
-
-	principalParticipants, relationshipParticipants := categorizeEventParticipants(participants)
-
-	isPersonEvent := len(principalParticipants) > 0
-	isRelationshipEvent := len(relationshipParticipants) > 0
-
-	if isPersonEvent && isRelationshipEvent {
-		return "", fmt.Errorf("event has participants with both principal and relationship roles: %s",
-			participants)
-	}
-
-	if !isPersonEvent && !isRelationshipEvent {
-		return "", fmt.Errorf("event has no participants with principal or relationship roles: %s",
-			participants)
-	}
-
-	var parts []string
-
-	if isPersonEvent {
-		if len(principalParticipants) != 1 {
-			return "", fmt.Errorf("event has %d principals: %s",
-				len(principalParticipants), principalParticipants)
-		}
-		parts = append(parts, strings.TrimPrefix(principalParticipants[0].Person, glx.EntityIDPrefixPerson))
-	}
-
-	if isRelationshipEvent {
-		if len(relationshipParticipants) != 2 {
-			return "", fmt.Errorf("event has %d relationship participants: %s",
-				len(relationshipParticipants), relationshipParticipants)
-		}
-		parts = append(parts, strings.TrimPrefix(relationshipParticipants[0].Person, glx.EntityIDPrefixPerson))
-		parts = append(parts, strings.TrimPrefix(relationshipParticipants[1].Person, glx.EntityIDPrefixPerson))
-	}
-
-	parts = append(parts, event.Type)
-	return composeID(glx.EntityIDPrefixEvent, parts...), nil
-}
-
-var knownEventTypes = []string{
-	"birth",
-	"death",
-	"marriage",
-}
-
-var relationshipEventPrimaryRoles = []string{
-	"bride",
-	"groom",
-	"spouse",
-}
-
-var personEventPrincipalRoles = []string{
-	"principal",
-	"subject",
+	return fmt.Sprintf("%s%s-%s", glx.EntityIDPrefixEvent, slug, e.Type), nil
 }
 
 func recommendPersonID(person *glx.Person) (string, error) {
@@ -237,7 +186,13 @@ func recommendPersonID(person *glx.Person) (string, error) {
 
 func recommendRelationshipID(r *glx.Relationship) (string, error) {
 	summary := summarizeParticipants(r.Participants)
-	return summary.relationshipID()
+
+	slug, err := summary.slug(2)
+	if err != nil {
+		return "", fmt.Errorf("relationship: %w", err)
+	}
+
+	return glx.EntityIDPrefixRelationship + slug, nil
 }
 
 // Roles that go on the left of a two-person ID.
@@ -256,6 +211,7 @@ var rightPrimaryRoles = []string{
 	"godchild",
 }
 
+// Roles that go in source order in a two-person ID.
 var unorderedPrimaryRoles = []string{
 	"principal",
 	"subject",
@@ -295,22 +251,26 @@ func personSlug(personID string) string {
 	return strings.TrimPrefix(personID, glx.EntityIDPrefixPerson)
 }
 
-func relationshipID(left, right string) string {
-	return fmt.Sprintf("%s%s-%s", glx.EntityIDPrefixRelationship, personSlug(left), personSlug(right))
-}
-
-func (s participantSummary) relationshipID() (string, error) {
-	if n := len(s.Left) + len(s.Right) + len(s.Unordered); n != 2 {
-		return "", fmt.Errorf("relationship has %d partipants with defining roles", n)
+func (s participantSummary) slug(minParticipants int) (string, error) {
+	participantCount := len(s.Left) + len(s.Right) + len(s.Unordered)
+	if participantCount < minParticipants {
+		return "", fmt.Errorf("%d partipants with defining roles", participantCount)
 	}
 
 	if len(s.Unordered) == 2 {
-		return relationshipID(s.Unordered[0].Person, s.Unordered[1].Person), nil
-
+		left := personSlug(s.Unordered[0].Person)
+		right := personSlug(s.Unordered[1].Person)
+		return fmt.Sprintf("%s-%s", left, right), nil
 	}
 
 	if len(s.Left) == 1 && len(s.Right) == 1 {
-		return relationshipID(s.Left[0].Person, s.Right[0].Person), nil
+		left := personSlug(s.Left[0].Person)
+		right := personSlug(s.Right[0].Person)
+		return fmt.Sprintf("%s-%s", left, right), nil
+	}
+
+	if len(s.Unordered) == 1 {
+		return personSlug(s.Unordered[0].Person), nil
 	}
 
 	var roles []string
@@ -320,34 +280,5 @@ func (s participantSummary) relationshipID() (string, error) {
 
 	slices.Sort(roles)
 
-	return "", fmt.Errorf("relationship participants have incompatible roles: %s", roles)
-}
-
-func categorizeEventParticipants(pp []glx.Participant) ([]glx.Participant, []glx.Participant) {
-	var primaryParticipants []glx.Participant
-	var relationshipParticipants []glx.Participant
-	for _, p := range pp {
-		if slices.Contains(personEventPrincipalRoles, p.Role) {
-			primaryParticipants = append(primaryParticipants, p)
-			continue
-		}
-		if slices.Contains(relationshipEventPrimaryRoles, p.Role) {
-			relationshipParticipants = append(relationshipParticipants, p)
-		}
-	}
-	return primaryParticipants, relationshipParticipants
-}
-
-func participantsByRole(pp []glx.Participant) map[string][]glx.Participant {
-	var out = make(map[string][]glx.Participant)
-
-	for _, p := range pp {
-		out[p.Role] = append(out[p.Role], p)
-	}
-
-	return out
-}
-
-func composeID(prefix string, parts ...string) string {
-	return prefix + strings.Join(parts, "-")
+	return "", fmt.Errorf("incompatible roles: %s", roles)
 }
