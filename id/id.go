@@ -4,10 +4,14 @@ package id
 import (
 	"errors"
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
 	"slices"
+	"strconv"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/dhemery/glxx/load"
 	"github.com/genealogix/glx/go-glx"
@@ -91,7 +95,7 @@ func id(c *cobra.Command, args []string) error {
 		// "-1732" differentiates this George Washington from others.
 		if strings.HasPrefix(id, recommendedID) {
 			if showMatches {
-				fmt.Fprintln(os.Stdout, "matches recommendation:", id)
+				fmt.Fprintln(os.Stdout, "matches recommendation:", id, "matches", recommendedID)
 			}
 			continue
 		}
@@ -141,11 +145,13 @@ func findEntity(id string, f *glx.GLXFile) any {
 		return e
 	}
 	return nil
-
 }
 
 func recommendID(entity any) (string, error) {
 	switch v := entity.(type) {
+	case *glx.Assertion:
+		return recommendAssertionID(v)
+
 	case *glx.Event:
 		return recommendEventID(v)
 
@@ -158,6 +164,61 @@ func recommendID(entity any) (string, error) {
 	default:
 		return "", fmt.Errorf("entity type %T", v)
 	}
+}
+
+func recommendAssertionID(a *glx.Assertion) (string, error) {
+	var slug string
+
+	s := a.Subject
+	switch s.Type() {
+
+	case glx.EntityTypeEvents:
+		slug = strings.TrimPrefix(s.Event, glx.EntityIDPrefixEvent)
+	case glx.EntityTypePersons:
+		slug = slugFromPersonID(s.Person)
+	case glx.EntityTypePlaces:
+		slug = strings.TrimPrefix(s.Place, glx.EntityIDPrefixPlace)
+	case glx.EntityTypeRelationships:
+		slug = strings.TrimPrefix(s.Relationship, glx.EntityIDPrefixRelationship)
+	}
+
+	firstRune, _ := utf8.DecodeRuneInString(slug)
+	if unicode.IsDigit(firstRune) {
+		return "", fmt.Errorf("non-descriptive subject ID: %s", s.ID())
+	}
+
+	detail, err := assertionDetail(a)
+	if err != nil {
+		return "", err
+	}
+
+	if detail == "" {
+		return fmt.Sprintf("%s%s", glx.EntityIDPrefixAssertion, slug), nil
+	}
+
+	return fmt.Sprintf("%s%s-%s", glx.EntityIDPrefixAssertion, slug, detail), nil
+}
+
+func assertionDetail(a *glx.Assertion) (string, error) {
+	var parts []string
+
+	if a.Participant != nil {
+		return "", fmt.Errorf("has participant: %s", a.Participant)
+	}
+
+	if a.Property != "" {
+		parts = append(parts, a.Property)
+	}
+
+	if a.Date != "" {
+		year := glx.ExtractFirstYear(a.Date.String())
+		if year <= 0 {
+			return "", fmt.Errorf("invalid year: %d in %s", year, a.Date)
+		}
+		parts = append(parts, strconv.Itoa(year))
+	}
+
+	return strings.Join(parts, "-"), nil
 }
 
 func recommendEventID(e *glx.Event) (string, error) {
@@ -195,21 +256,18 @@ func recommendRelationshipID(r *glx.Relationship) (string, error) {
 	return glx.EntityIDPrefixRelationship + slug, nil
 }
 
-// Roles that go on the left of a two-person ID.
-var leftPrimaryRoles = []string{
-	"groom",
-	"parent",
-	"adoptive_parent",
-	"godparent",
+var pairedRoles = map[string]string{
+	"groom":           "bride",
+	"parent":          "child",
+	"adoptive_parent": "adoptive_child",
+	"godparent":       "godchild",
 }
 
+// Roles that go on the left of a two-person ID.
+var leftPrimaryRoles = slices.Collect(maps.Keys(pairedRoles))
+
 // Roles that go on the right of a two-person ID.
-var rightPrimaryRoles = []string{
-	"bride",
-	"child",
-	"adopted_child",
-	"godchild",
-}
+var rightPrimaryRoles = slices.Collect(maps.Values(pairedRoles))
 
 // Roles that go in source order in a two-person ID.
 var unorderedPrimaryRoles = []string{
@@ -247,38 +305,49 @@ func summarizeParticipants(pp []glx.Participant) participantSummary {
 	return summary
 }
 
-func personSlug(personID string) string {
+func slugFromPersonID(personID string) string {
 	return strings.TrimPrefix(personID, glx.EntityIDPrefixPerson)
 }
 
 func (s participantSummary) slug(minParticipants int) (string, error) {
-	participantCount := len(s.Left) + len(s.Right) + len(s.Unordered)
-	if participantCount < minParticipants {
-		return "", fmt.Errorf("%d partipants with defining roles", participantCount)
-	}
-
-	if len(s.Unordered) == 2 {
-		left := personSlug(s.Unordered[0].Person)
-		right := personSlug(s.Unordered[1].Person)
-		return fmt.Sprintf("%s-%s", left, right), nil
-	}
-
-	if len(s.Left) == 1 && len(s.Right) == 1 {
-		left := personSlug(s.Left[0].Person)
-		right := personSlug(s.Right[0].Person)
-		return fmt.Sprintf("%s-%s", left, right), nil
-	}
-
-	if len(s.Unordered) == 1 {
-		return personSlug(s.Unordered[0].Person), nil
-	}
+	const maxParticipants = 2
 
 	var roles []string
 	for _, p := range slices.Concat(s.Left, s.Right, s.Unordered) {
 		roles = append(roles, p.Role)
 	}
-
 	slices.Sort(roles)
 
-	return "", fmt.Errorf("incompatible roles: %s", roles)
+	participantCount := len(s.Left) + len(s.Right) + len(s.Unordered)
+	if participantCount < minParticipants || participantCount > maxParticipants {
+		return "", fmt.Errorf("%d participants with defining roles: %s",
+			participantCount, roles)
+	}
+
+	if len(s.Unordered) == 2 {
+		left, right := s.Unordered[0], s.Unordered[1]
+
+		if left.Role != right.Role {
+			return "", fmt.Errorf("different roles: %s, %s",
+				left.Role, right.Role)
+		}
+
+		return fmt.Sprintf("%s-%s", slugFromPersonID(left.Person), slugFromPersonID(right.Person)), nil
+	}
+
+	if len(s.Left) == 1 && len(s.Right) == 1 {
+		left, right := s.Left[0], s.Right[0]
+
+		if right.Role != pairedRoles[left.Role] {
+			return "", fmt.Errorf("incompatible roles: %s, %s", left.Role, right.Role)
+		}
+
+		return fmt.Sprintf("%s-%s", slugFromPersonID(left.Person), slugFromPersonID(right.Person)), nil
+	}
+
+	if len(s.Unordered) == 1 {
+		return slugFromPersonID(s.Unordered[0].Person), nil
+	}
+
+	return "", fmt.Errorf("unknown combination of roles: %s", roles)
 }
