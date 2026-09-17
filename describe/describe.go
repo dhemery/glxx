@@ -38,7 +38,7 @@ var Command = &cobra.Command{
 
 var (
 	describeNotes      = false
-	describeProperties = false
+	describeProperties = true
 )
 
 func init() {
