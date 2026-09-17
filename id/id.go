@@ -73,10 +73,14 @@ func id(c *cobra.Command, args []string) error {
 
 		entity := findEntity(id, glxFile)
 		if entity == nil {
-			if id != arg {
-				return fmt.Errorf("unknown entity %s (%s)", id, arg)
+			if showUnables {
+				if id != arg {
+					fmt.Fprintf(os.Stdout, "no recommendation: unknown entity %s (%s)\n", id, arg)
+				} else {
+					fmt.Fprintf(os.Stdout, "no recommendation: unknown entity %s\n", id)
+				}
 			}
-			return fmt.Errorf("unknown entity %s", id)
+			continue
 		}
 
 		recommendedID, err := recommendID(entity)
