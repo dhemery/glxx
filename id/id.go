@@ -42,22 +42,37 @@ var Command = &cobra.Command{
 	ValidArgsFunction: completeIDs,
 }
 
+var allIDs []string
+
 func completeIDs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
-	archivePath, err := cmd.Flags().GetString("archive")
-	if err != nil {
-		return nil, cobra.ShellCompDirectiveError
+	if len(allIDs) == 0 {
+		archivePath, err := cmd.Flags().GetString("archive")
+		if err != nil {
+			return nil, cobra.ShellCompDirectiveError
+		}
+		fsys := os.DirFS(archivePath)
+
+		for _, dir := range []string{"assertions", "events", "persons", "relationships"} {
+			files, err := fs.Glob(fsys, filepath.Join(dir, "*.glx"))
+			if err != nil {
+				return nil, cobra.ShellCompDirectiveError
+			}
+
+			for _, f := range files {
+				id := strings.TrimSuffix(filepath.Base(f), filepath.Ext(f))
+				allIDs = append(allIDs, id)
+			}
+		}
+		slices.Sort(allIDs)
 	}
 
-	fsys := os.DirFS(archivePath)
-	files, err := fs.Glob(fsys, "**/*.glx")
-
-	var ids []string
-
-	for _, f := range files {
-		id := strings.TrimSuffix(filepath.Base(f), filepath.Ext(f))
-		ids = append(ids, id)
+	var completions []string
+	for _, id := range allIDs {
+		if strings.HasPrefix(id, toComplete) {
+			completions = append(completions, id)
+		}
 	}
-	return ids, cobra.ShellCompDirectiveDefault
+	return completions, cobra.ShellCompDirectiveDefault | cobra.ShellCompDirectiveKeepOrder
 }
 
 var (
