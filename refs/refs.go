@@ -4,7 +4,9 @@ package refs
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"slices"
+	"strings"
 
 	"github.com/dhemery/glxx/describe"
 	"github.com/dhemery/glxx/load"
@@ -16,7 +18,7 @@ var Command = &cobra.Command{
 	Use:   "refs [flags] entity",
 	Short: "Describes each entity that references the given one",
 	Args:  cobra.ExactArgs(1),
-	RunE:  runRefs,
+	RunE:  refs,
 }
 
 var (
@@ -31,7 +33,7 @@ func init() {
 	Command.Flags().BoolVarP(&refsSort, "sort", "s", refsSort, "Sort referrers by ID")
 }
 
-func runRefs(c *cobra.Command, args []string) error {
+func refs(c *cobra.Command, args []string) error {
 	archivePath, err := c.Flags().GetString("archive")
 	if err != nil {
 		return err
@@ -42,7 +44,7 @@ func runRefs(c *cobra.Command, args []string) error {
 		return err
 	}
 
-	id := args[0]
+	id := strings.TrimSuffix(filepath.Base(args[0]), filepath.Ext(args[0]))
 
 	referrerIDs := referrersTo(id, glxfile)
 
