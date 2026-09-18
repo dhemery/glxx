@@ -4,6 +4,7 @@ package id
 import (
 	"errors"
 	"fmt"
+	"io/fs"
 	"maps"
 	"os"
 	"path/filepath"
@@ -33,11 +34,30 @@ results are displayed.
 `
 
 var Command = &cobra.Command{
-	Use:   "id [flags] entity...",
-	Short: "Show and recommend IDs for GLX entities",
-	Long:  idUsage,
-	RunE:  id,
-	Args:  cobra.MinimumNArgs(1),
+	Use:               "id [flags] entity...",
+	Short:             "Show and recommend IDs for GLX entities",
+	Long:              idUsage,
+	RunE:              id,
+	Args:              cobra.MinimumNArgs(1),
+	ValidArgsFunction: completeIDs,
+}
+
+func completeIDs(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
+	archivePath, err := cmd.Flags().GetString("archive")
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveError
+	}
+
+	fsys := os.DirFS(archivePath)
+	files, err := fs.Glob(fsys, "**/*.glx")
+
+	var ids []string
+
+	for _, f := range files {
+		id := strings.TrimSuffix(filepath.Base(f), filepath.Ext(f))
+		ids = append(ids, id)
+	}
+	return ids, cobra.ShellCompDirectiveDefault
 }
 
 var (
