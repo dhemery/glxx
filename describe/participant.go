@@ -10,7 +10,11 @@ type Participant struct {
 }
 
 func (p *Participant) DescribeAsReference(r Report) {
-	label := strings.ToUpper(p.role[:1]) + p.role[1:]
+	role := p.role
+	if role == "" {
+		role = "subject"
+	}
+	label := strings.ToUpper(role[:1]) + role[1:]
 	p.person.DescribeAsReference(r, label)
 }
 
