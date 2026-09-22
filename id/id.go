@@ -83,13 +83,15 @@ func id(c *cobra.Command, args []string) error {
 			continue
 		}
 
-		recommendedID, err := recommendID(entity)
+		rawRecommendation, err := recommendID(entity)
 		if err != nil {
 			if showUnables {
 				fmt.Fprintf(os.Stdout, "no recommendation for %s: %s\n", id, err)
 			}
 			continue
 		}
+
+		recommendedID := glx.Slugify(rawRecommendation)
 
 		// Accept the current ID if it starts with the recommended ID.
 		// Assume that the suffix was added to differentiate this
